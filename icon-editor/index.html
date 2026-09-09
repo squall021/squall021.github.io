@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>圖示編輯器 V1.1</title>
+<style>
+  :root{
+    --bg:#f5f6f8;
+    --panel:#ffffff;
+    --line:#dfe3e8;
+    --text:#20242a;
+    --muted:#6b7280;
+    --accent:#2563eb;
+    --accent-soft:#eaf1ff;
+    --danger:#dc2626;
+    --shadow:0 8px 24px rgba(0,0,0,.08);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:"Segoe UI","Microsoft JhengHei",system-ui,-apple-system,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    min-height:100vh;
+    overflow:hidden;
+  }
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  .app{
+    display:grid;
+    grid-template-rows:58px 1fr;
+    height:100vh;
+  }
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:0 18px;
+    background:#fff;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+  }
+  .brand-logo{
+    width:34px;height:34px;border-radius:10px;
+    display:grid;place-items:center;
+    background:var(--accent-soft); color:var(--accent);
+    font-weight:700;
+  }
+  .brand h1{font-size:18px;margin:0;white-space:nowrap}
+  .toolbar{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  }
+  .btn{
+    border:1px solid var(--line);
+    background:#fff;
+    color:var(--text);
+    border-radius:9px;
+    padding:8px 12px;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .btn:hover{background:#f8fafc}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .btn.primary:hover{filter:brightness(.96)}
+  .btn.ghost{border-color:transparent;background:transparent}
+  .btn.danger{color:var(--danger)}
+  .workspace{
+    display:grid;
+    grid-template-columns:310px 1fr 330px;
+    min-height:0;
+  }
+  .panel{
+    background:var(--panel);
+    min-height:0;
+    overflow:auto;
+  }
+  .left{border-right:1px solid var(--line)}
+  .right{border-left:1px solid var(--line)}
+  .panel-inner{padding:16px}
+  .section-title{
+    font-size:13px;
+    font-weight:700;
+    margin:0 0 10px;
+    color:#374151;
+  }
+  .search{
+    position:relative;
+    margin-bottom:10px;
+  }
+  .search input{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:9px 10px 9px 34px;
+    outline:none;
+    background:#fff;
+  }
+  .search span{
+    position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    color:var(--muted);
+  }
+  .tabs{
+    display:flex;gap:6px;overflow:auto;padding-bottom:8px;
+    scrollbar-width:thin;
+  }
+  .tab{
+    flex:0 0 auto;
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:6px 10px;
+    background:#fff;
+    color:#4b5563;
+    font-size:12px;
+  }
+  .tab.active{
+    background:var(--accent-soft);
+    border-color:#bfd3ff;
+    color:#1d4ed8;
+    font-weight:700;
+  }
+  .icon-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:9px;
+  }
+  .icon-item{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:#fff;
+    min-height:76px;
+    padding:9px 6px 6px;
+    display:flex;
+    cursor:pointer;
+    user-select:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:5px;
+  }
+  .icon-item:hover{border-color:#9db7ef;background:#fbfdff}
+  .icon-item.active{
+    border-color:var(--accent);
+    box-shadow:0 0 0 2px rgba(37,99,235,.12);
+    background:#f8fbff;
+  }
+  .icon-preview{
+    width:30px;height:30px;
+    color:#111827;
+    display:grid;place-items:center;
+  }
+  .icon-preview svg{width:100%;height:100%}
+  .icon-name{
+    font-size:11px;
+    color:#4b5563;
+    max-width:100%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  .favorite{
+    position:absolute;right:5px;top:4px;
+    border:none;background:transparent;color:#a8afb9;
+    padding:2px;font-size:14px;line-height:1;
+  }
+  .favorite.on{color:#f59e0b}
+  .upload-box{
+    border:1.5px dashed #b9c2cf;
+    border-radius:12px;
+    padding:14px;
+    text-align:center;
+    background:#fafbfc;
+    margin-bottom:12px;
+  }
+  .upload-box input{display:none}
+  .upload-box .btn{justify-content:center}
+  .upload-note{
+    margin-top:8px;
+    font-size:11px;
+    color:var(--muted);
+    line-height:1.45;
+  }
+
+  .stage{
+    position:relative;
+    min-width:0;
+    min-height:0;
+    overflow:auto;
+    background:
+      linear-gradient(45deg,#eef0f3 25%,transparent 25%),
+      linear-gradient(-45deg,#eef0f3 25%,transparent 25%),
+      linear-gradient(45deg,transparent 75%,#eef0f3 75%),
+      linear-gradient(-45deg,transparent 75%,#eef0f3 75%);
+    background-size:22px 22px;
+    background-position:0 0,0 11px,11px -11px,-11px 0;
+  }
+  .stage-toolbar{
+    position:sticky;
+    top:12px;
+    z-index:5;
+    display:flex;
+    justify-content:center;
+    pointer-events:none;
+  }
+  .stage-toolbar .group{
+    pointer-events:auto;
+    display:flex;align-items:center;gap:8px;
+    padding:7px 10px;
+    border:1px solid var(--line);
+    background:rgba(255,255,255,.94);
+    backdrop-filter:blur(8px);
+    border-radius:10px;
+    box-shadow:0 5px 18px rgba(0,0,0,.08);
+  }
+  .stage-toolbar input[type=range]{width:120px}
+  .stage-center{
+    min-height:100%;
+    min-width:100%;
+    display:grid;
+    place-items:center;
+    padding:80px;
+  }
+  .canvas-wrap{
+    position:relative;
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+    background:transparent;
+    transform-origin:center center;
+  }
+  #previewSvg{display:block}
+  .stage-info{
+    position:absolute;
+    left:14px;bottom:12px;
+    color:#556070;
+    font-size:12px;
+    background:rgba(255,255,255,.9);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 8px;
+  }
+
+  .control-section{
+    border-bottom:1px solid #edf0f3;
+    padding:0 0 16px;
+    margin-bottom:16px;
+  }
+  .control-section:last-child{border-bottom:none}
+  .control-row{
+    display:grid;
+    grid-template-columns:105px 1fr;
+    gap:10px;
+    align-items:center;
+    margin:9px 0;
+  }
+  .control-row label{
+    color:#4b5563;
+    font-size:12px;
+  }
+  .control-row input[type="text"],
+  .control-row input[type="number"],
+  .control-row select{
+    width:100%;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:7px 8px;
+    outline:none;
+    background:#fff;
+  }
+  .control-row input:focus,.control-row select:focus{border-color:#94b4f6}
+  .range-line{
+    display:grid;
+    grid-template-columns:1fr 62px;
+    gap:8px;
+    align-items:center;
+  }
+  .range-line input[type=range]{width:100%}
+  .mini-val{
+    border:1px solid var(--line);
+    border-radius:7px;
+    padding:5px 6px;
+    text-align:center;
+    font-size:12px;
+    background:#fff;
+  }
+  .color-field{
+    display:grid;
+    grid-template-columns:40px 1fr;
+    gap:8px;
+  }
+  input[type="color"]{
+    width:40px;height:34px;padding:2px;
+    border:1px solid var(--line);
+    border-radius:8px;background:#fff;
+  }
+  .shape-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+  .shape-btn{
+    border:1px solid var(--line);
+    border-radius:9px;
+    background:#fff;
+    padding:9px 4px;
+    font-size:11px;
+  }
+  .shape-btn.active{
+    background:var(--accent-soft);
+    color:#1d4ed8;
+    border-color:#9bb8f5;
+    font-weight:700;
+  }
+  .preset-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+  }
+  .preset{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:8px;
+    padding:7px 6px;
+    font-size:11px;
+  }
+  .preset:hover{background:#f8fafc}
+  .two-cols{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+  .check-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin:9px 0;
+    font-size:12px;color:#4b5563;
+  }
+  .switch{
+    position:relative;width:38px;height:22px;
+  }
+  .switch input{display:none}
+  .slider{
+    position:absolute;inset:0;background:#cbd5e1;border-radius:999px;
+    transition:.2s;
+  }
+  .slider:before{
+    content:"";position:absolute;width:16px;height:16px;left:3px;top:3px;
+    background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2);
+  }
+  .switch input:checked + .slider{background:var(--accent)}
+  .switch input:checked + .slider:before{transform:translateX(16px)}
+  .small-note{
+    font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px;
+  }
+  .empty{
+    grid-column:1/-1;
+    text-align:center;
+    color:var(--muted);
+    padding:24px 10px;
+    font-size:12px;
+  }
+  .toast{
+    position:fixed;
+    left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
+    background:#111827;color:#fff;padding:10px 14px;border-radius:9px;
+    font-size:13px;opacity:0;pointer-events:none;transition:.25s;z-index:99;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media(max-width:1050px){
+    body{overflow:auto}
+    .app{height:auto;min-height:100vh}
+    .workspace{grid-template-columns:260px minmax(520px,1fr) 300px;min-width:1080px;min-height:calc(100vh - 58px)}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">◎</div>
+      <h1>圖示編輯器</h1>
+    </div>
+    <div class="toolbar">
+      <button class="btn" id="resetBtn">↺ 還原</button>
+      <button class="btn" id="swapBtn">⇄ 交換顏色</button>
+      <button class="btn" id="svgBtn">匯出 SVG</button>
+      <button class="btn primary" id="pngBtn">⬇ 匯出 PNG</button>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="panel left">
+      <div class="panel-inner">
+        <div class="upload-box">
+          <div style="font-weight:700;margin-bottom:8px;">自訂圖示</div>
+          <label class="btn" for="fileInput">＋ 上傳 SVG / PNG / JPG</label>
+          <input id="fileInput" type="file" accept=".svg,image/svg+xml,image/png,image/jpeg,image/webp" multiple>
+          <div class="upload-note">SVG 最適合換色；PNG/JPG 可選擇「套用圖示顏色」進行單色化。</div>
+        </div>
+
+        <div class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="text" placeholder="搜尋圖示，例如：電話、地點">
+        </div>
+
+        <div class="tabs" id="tabs"></div>
+        <div class="icon-grid" id="iconGrid"></div>
+      </div>
+    </aside>
+
+    <section class="stage" id="stage">
+      <div class="stage-toolbar">
+        <div class="group">
+          <button class="btn ghost" id="zoomOut">−</button>
+          <input id="zoomRange" type="range" min="25" max="200" step="5" value="100">
+          <span id="zoomLabel" style="width:46px;text-align:right;font-size:12px;">100%</span>
+          <button class="btn ghost" id="zoomIn">＋</button>
+        </div>
+      </div>
+
+      <div class="stage-center">
+        <div class="canvas-wrap" id="canvasWrap">
+          <svg id="previewSvg" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"></svg>
+        </div>
+      </div>
+      <div class="stage-info" id="stageInfo">512 × 512 px</div>
+    </section>
+
+    <aside class="panel right">
+      <div class="panel-inner">
+        <div class="control-section">
+          <div class="section-title">圖示設定</div>
+
+          <div class="control-row">
+            <label>圖示顏色</label>
+            <div class="color-field">
+              <input id="iconColor" type="color" value="#ffffff">
+              <input id="iconHex" type="text" value="#FFFFFF">
+            </div>
+          </div>
+
+          <div class="check-row">
+            <span>套用圖示顏色</span>
+            <label class="switch">
+              <input id="tintToggle" type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="control-row">
+            <label>圖示大小</label>
+            <div class="range-line">
+              <input id="iconSize" type="range" min="20" max="95" value="58">
+              <div class="mini-val" id="iconSizeVal">58%</div>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <label>左右位置</label>
+            <div class="range-line">
+              <input id="offsetX" type="range" min="-40" max="40" value="0">
+              <div class="mini-val" id="offsetXVal">0%</div>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <label>上下位置</label>
+            <div class="range-line">
+              <input id="offsetY" type="range" min="-40" max="40" value="0">
+              <div class="mini-val" id="offsetYVal">0%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <div class="section-title">背景設定</div>
+
+          <div class="shape-grid" id="shapeGrid">
+            <button class="shape-btn" data-shape="none">無背景</button>
+            <button class="shape-btn" data-shape="square">正方形</button>
+            <button class="shape-btn active" data-shape="rounded">圓角方形</button>
+            <button class="shape-btn" data-shape="circle">圓形</button>
+          </div>
+
+          <div class="control-row">
+            <label>背景顏色</label>
+            <div class="color-field">
+              <input id="bgColor" type="color" value="#2563eb">
+              <input id="bgHex" type="text" value="#2563EB">
+            </div>
+          </div>
+
+          <div class="control-row" id="radiusRow">
+            <label>圓角</label>
+            <div class="range-line">
+              <input id="radiusRange" type="range" min="0" max="50" value="22">
+              <div class="mini-val" id="radiusVal">22%</div>
+            </div>
+          </div>
+
+          <div class="control-row">
+            <label>背景留白</label>
+            <div class="range-line">
+              <input id="bgInset" type="range" min="0" max="30" value="0">
+              <div class="mini-val" id="bgInsetVal">0%</div>
+            </div>
+          </div>
+
+          <div class="check-row">
+            <span>外框</span>
+            <label class="switch">
+              <input id="borderToggle" type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div id="borderControls" style="display:none;">
+            <div class="control-row">
+              <label>外框顏色</label>
+              <div class="color-field">
+                <input id="borderColor" type="color" value="#ffffff">
+                <input id="borderHex" type="text" value="#FFFFFF">
+              </div>
+            </div>
+            <div class="control-row">
+              <label>外框粗細</label>
+              <div class="range-line">
+                <input id="borderWidth" type="range" min="1" max="12" value="3">
+                <div class="mini-val" id="borderWidthVal">3%</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="check-row">
+            <span>陰影</span>
+            <label class="switch">
+              <input id="shadowToggle" type="checkbox">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="control-section">
+          <div class="section-title">畫布設定</div>
+
+          <div class="preset-grid">
+            <button class="preset" data-size="128">128 × 128</button>
+            <button class="preset" data-size="256">256 × 256</button>
+            <button class="preset" data-size="512">512 × 512</button>
+          </div>
+
+          <div class="two-cols" style="margin-top:10px;">
+            <div>
+              <label style="font-size:11px;color:#6b7280;">寬度</label>
+              <input id="canvasW" type="number" min="20" max="4096" value="512"
+                style="width:100%;margin-top:4px;border:1px solid var(--line);border-radius:8px;padding:7px 8px;">
+            </div>
+            <div>
+              <label style="font-size:11px;color:#6b7280;">高度</label>
+              <input id="canvasH" type="number" min="20" max="4096" value="512"
+                style="width:100%;margin-top:4px;border:1px solid var(--line);border-radius:8px;padding:7px 8px;">
+            </div>
+          </div>
+
+          <div class="check-row">
+            <span>鎖定正方形</span>
+            <label class="switch">
+              <input id="lockSquare" type="checkbox" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="small-note">建議一般網站與簡報使用 512 × 512；需要高解析輸出時可自行輸入更大尺寸。</div>
+        </div>
+
+        <div class="control-section">
+          <div class="section-title">匯出</div>
+          <div class="two-cols">
+            <button class="btn" id="svgBtn2">SVG</button>
+            <button class="btn primary" id="pngBtn2">PNG</button>
+          </div>
+          <div class="small-note">PNG 會依目前畫布尺寸輸出；SVG 可保留向量背景與內建 SVG 圖示。</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SVG_NS = "http://www.w3.org/2000/svg";
+
+const icons = [
+  {id:"phone", name:"電話", category:"常用", keywords:"電話 phone 通訊", viewBox:"0 0 24 24", svg:`<path d="M6.6 10.8c1.8 3.5 3.1 4.8 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24c1.08.36 2.1.55 3.1.55a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.4 21 3 13.6 3 4.5a1 1 0 0 1 1-1H7.5a1 1 0 0 1 1 1c0 1 .19 2.02.55 3.1a1 1 0 0 1-.24 1L6.6 10.8Z" fill="currentColor"/>`},
+  {id:"mobile", name:"手機", category:"常用", keywords:"手機 mobile phone", viewBox:"0 0 24 24", svg:`<rect x="6.5" y="2.5" width="11" height="19" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="18.5" r="1" fill="currentColor"/>`},
+  {id:"mail", name:"Email", category:"常用", keywords:"email 信箱 信封 mail", viewBox:"0 0 24 24", svg:`<rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`},
+  {id:"location", name:"地點", category:"常用", keywords:"地點 地址 定位 location pin map", viewBox:"0 0 24 24", svg:`<path d="M12 22s7-6 7-13A7 7 0 0 0 5 9c0 7 7 13 7 13Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9" r="2.4" fill="currentColor"/>`},
+  {id:"building", name:"建築物", category:"常用", keywords:"建築物 大樓 building office", viewBox:"0 0 24 24", svg:`<path d="M4 21V5l8-3 8 3v16" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2M10 21v-3h4v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"home", name:"首頁", category:"常用", keywords:"首頁 房子 home house", viewBox:"0 0 24 24", svg:`<path d="m3 11 9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9Z" fill="currentColor"/>`},
+  {id:"globe", name:"網站", category:"常用", keywords:"網站 地球 globe web www", viewBox:"0 0 24 24", svg:`<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" fill="none" stroke="currentColor" stroke-width="2"/>`},
+  {id:"person", name:"人物", category:"常用", keywords:"人物 聯絡人 user person", viewBox:"0 0 24 24", svg:`<circle cx="12" cy="8" r="4" fill="currentColor"/><path d="M4 21a8 8 0 0 1 16 0H4Z" fill="currentColor"/>`},
+  {id:"info", name:"資訊", category:"常用", keywords:"資訊 info information", viewBox:"0 0 24 24", svg:`<circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="7.5" r="1.2" fill="currentColor"/><path d="M12 11v6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"calendar", name:"行事曆", category:"常用", keywords:"行事曆 日期 日曆 calendar", viewBox:"0 0 24 24", svg:`<rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 2v6M17 2v6M3 10h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+
+  {id:"chat", name:"訊息", category:"通訊", keywords:"聊天 訊息 chat message", viewBox:"0 0 24 24", svg:`<path d="M4 4h16v12H9l-5 4V4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 9h8M8 13h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"at", name:"@", category:"通訊", keywords:"@ email at", viewBox:"0 0 24 24", svg:`<path d="M16 8v6a3 3 0 0 0 6 0v-2a10 10 0 1 0-3 7.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="2"/>`},
+  {id:"fax", name:"傳真", category:"通訊", keywords:"傳真 fax printer", viewBox:"0 0 24 24", svg:`<path d="M7 3h10v5H7zM5 9h14a2 2 0 0 1 2 2v7h-4v3H7v-3H3v-7a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 15h6M9 18h6" stroke="currentColor" stroke-width="2"/>`},
+  {id:"rss", name:"RSS", category:"通訊", keywords:"RSS 訂閱 feed", viewBox:"0 0 24 24", svg:`<circle cx="6" cy="18" r="2" fill="currentColor"/><path d="M4 11a9 9 0 0 1 9 9M4 5a15 15 0 0 1 15 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>`},
+
+  {id:"map", name:"地圖", category:"地點", keywords:"地圖 map location", viewBox:"0 0 24 24", svg:`<path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 3v15M15 6v15" stroke="currentColor" stroke-width="2"/>`},
+  {id:"office", name:"辦公室", category:"地點", keywords:"辦公室 office workplace", viewBox:"0 0 24 24", svg:`<path d="M3 21h18M5 21V4h10v17M15 9h4v12" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 8h4M8 12h4M8 16h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"classroom", name:"教室", category:"地點", keywords:"教室 classroom school", viewBox:"0 0 24 24", svg:`<rect x="3" y="3" width="18" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 15v6M7 8h4M7 11h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"temple", name:"場所", category:"地點", keywords:"場所 寺院 禮堂 temple hall", viewBox:"0 0 24 24", svg:`<path d="M3 9h18L12 3 3 9ZM5 11h14v9H5zM2 21h20" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 11v9M15 11v9" stroke="currentColor" stroke-width="2"/>`},
+
+  {id:"printer", name:"印表機", category:"設備", keywords:"印表機 printer", viewBox:"0 0 24 24", svg:`<path d="M7 8V3h10v5M7 17H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="11" r="1" fill="currentColor"/>`},
+  {id:"computer", name:"電腦", category:"設備", keywords:"電腦 desktop computer", viewBox:"0 0 24 24", svg:`<rect x="2.5" y="3.5" width="19" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 16.5V21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"monitor", name:"螢幕", category:"設備", keywords:"螢幕 monitor display", viewBox:"0 0 24 24", svg:`<rect x="3" y="4" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 21h6M12 17v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"camera", name:"相機", category:"設備", keywords:"相機 camera photo", viewBox:"0 0 24 24", svg:`<path d="M4 7h4l2-3h4l2 3h4a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="13" r="4" fill="none" stroke="currentColor" stroke-width="2"/>`},
+  {id:"mic", name:"麥克風", category:"設備", keywords:"麥克風 microphone mic", viewBox:"0 0 24 24", svg:`<rect x="9" y="2" width="6" height="12" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v4M8 22h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`},
+  {id:"qr", name:"QR", category:"設備", keywords:"QR qrcode", viewBox:"0 0 24 24", svg:`<path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 19h2v2h-2zM19 14h2v2h-2z" fill="currentColor"/>`}
+];
+
+const categories = ["常用","通訊","地點","設備","我的上傳","收藏"];
+let uploads = [];
+let favorites = new Set(JSON.parse(localStorage.getItem("iconEditorFavorites") || "[]"));
+
+const state = {
+  selectedId:"phone",
+  selectedType:"builtin",
+  shape:"rounded",
+  iconColor:"#FFFFFF",
+  bgColor:"#2563EB",
+  iconSize:58,
+  offsetX:0,
+  offsetY:0,
+  radius:22,
+  bgInset:0,
+  border:false,
+  borderColor:"#FFFFFF",
+  borderWidth:3,
+  shadow:false,
+  width:512,
+  height:512,
+  zoom:100,
+  tint:true,
+  category:"常用"
+};
+
+const $ = sel => document.querySelector(sel);
+const $$ = sel => [...document.querySelectorAll(sel)];
+const preview = $("#previewSvg");
+
+function esc(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function toast(msg){
+  const t=$("#toast"); t.textContent=msg; t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),1800);
+}
+function hexNormalize(v, fallback){
+  let x=(v||"").trim().toUpperCase();
+  if(!x.startsWith("#")) x="#"+x;
+  if(/^#[0-9A-F]{6}$/.test(x)) return x;
+  if(/^#[0-9A-F]{3}$/.test(x)) return "#"+x.slice(1).split("").map(c=>c+c).join("");
+  return fallback;
+}
+function svgEl(name, attrs={}){
+  const el=document.createElementNS(SVG_NS,name);
+  Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));
+  return el;
+}
+function currentIcon(){
+  if(state.selectedType==="builtin") return icons.find(x=>x.id===state.selectedId) || icons[0];
+  return uploads.find(x=>x.id===state.selectedId) || uploads[0];
+}
+
+function renderTabs(){
+  $("#tabs").innerHTML=categories.map(c=>`<button class="tab ${state.category===c?"active":""}" data-cat="${c}">${c}</button>`).join("");
+  $$(".tab").forEach(b=>b.onclick=()=>{state.category=b.dataset.cat;renderTabs();renderIconGrid();});
+}
+function renderIconGrid(){
+  const q=$("#searchInput").value.trim().toLowerCase();
+  let data=[];
+  if(state.category==="我的上傳"){
+    data=uploads;
+  }else if(state.category==="收藏"){
+    data=[
+      ...icons.filter(i=>favorites.has("builtin:"+i.id)).map(i=>({...i,_type:"builtin"})),
+      ...uploads.filter(i=>favorites.has("upload:"+i.id)).map(i=>({...i,_type:"upload"}))
+    ];
+  }else{
+    data=icons.filter(i=>i.category===state.category).map(i=>({...i,_type:"builtin"}));
+  }
+  if(q) data=data.filter(i=>`${i.name} ${i.keywords||""}`.toLowerCase().includes(q));
+
+  if(!data.length){
+    $("#iconGrid").innerHTML=`<div class="empty">${state.category==="我的上傳"?"尚未上傳圖示":"找不到符合的圖示"}</div>`;
+    return;
+  }
+
+  $("#iconGrid").innerHTML=data.map(i=>{
+    const type=i._type || (uploads.some(u=>u.id===i.id)?"upload":"builtin");
+    const active=state.selectedId===i.id && state.selectedType===type;
+    const fav=favorites.has(type+":"+i.id);
+    let body="";
+    if(type==="builtin"){
+      body=`<svg viewBox="${i.viewBox}" aria-hidden="true">${i.svg}</svg>`;
+    }else if(i.kind==="svg"){
+      body=`<img src="${i.url}" style="max-width:100%;max-height:100%;display:block">`;
+    }else{
+      body=`<img src="${i.url}" style="max-width:100%;max-height:100%;display:block">`;
+    }
+    return `<div class="icon-item ${active?"active":""}" data-id="${i.id}" data-type="${type}" role="button" tabindex="0" aria-label="${esc(i.name)}">
+      <button class="favorite ${fav?"on":""}" data-fav="${type}:${i.id}" title="收藏" aria-label="收藏 ${esc(i.name)}">★</button>
+      <span class="icon-preview">${body}</span>
+      <span class="icon-name">${esc(i.name)}</span>
+    </div>`;
+  }).join("");
+
+  $$(".icon-item").forEach(b=>{
+    const selectIcon=e=>{
+      if(e.target.closest && e.target.closest(".favorite")) return;
+      state.selectedId=b.dataset.id;
+      state.selectedType=b.dataset.type;
+      renderIconGrid();
+      renderPreview();
+    };
+    b.onclick=selectIcon;
+    b.onkeydown=e=>{
+      if(e.key==="Enter" || e.key===" "){
+        e.preventDefault();
+        selectIcon(e);
+      }
+    };
+  });
+  $$(".favorite").forEach(b=>{
+    b.onclick=e=>{
+      e.stopPropagation();
+      const key=b.dataset.fav;
+      favorites.has(key)?favorites.delete(key):favorites.add(key);
+      localStorage.setItem("iconEditorFavorites",JSON.stringify([...favorites]));
+      renderIconGrid();
+    };
+  });
+}
+
+async function handleFiles(files){
+  for(const file of files){
+    const id="up_"+Date.now()+"_"+Math.random().toString(36).slice(2,8);
+    const ext=file.name.split(".").pop().toLowerCase();
+    if(file.type==="image/svg+xml" || ext==="svg"){
+      const text=await file.text();
+      const url=URL.createObjectURL(new Blob([text],{type:"image/svg+xml"}));
+      uploads.push({id,name:file.name.replace(/\.[^.]+$/,""),category:"我的上傳",kind:"svg",text,url,keywords:file.name});
+    }else{
+      const url=URL.createObjectURL(file);
+      uploads.push({id,name:file.name.replace(/\.[^.]+$/,""),category:"我的上傳",kind:"raster",url,keywords:file.name});
+    }
+  }
+  if(files.length){
+    const last=uploads[uploads.length-1];
+    state.category="我的上傳";
+    state.selectedId=last.id;
+    state.selectedType="upload";
+    renderTabs();renderIconGrid();renderPreview();
+  }
+}
+$("#fileInput").addEventListener("change",e=>handleFiles([...e.target.files]));
+$("#searchInput").addEventListener("input",renderIconGrid);
+
+function addBackground(){
+  if(state.shape==="none") return;
+  const w=state.width,h=state.height;
+  const inset=Math.min(w,h)*(state.bgInset/100);
+  const x=inset,y=inset,bw=w-2*inset,bh=h-2*inset;
+  let shape;
+  const stroke=state.border?state.borderColor:"none";
+  const sw=state.border?Math.min(w,h)*(state.borderWidth/100):0;
+
+  if(state.shape==="circle"){
+    const d=Math.min(bw,bh);
+    shape=svgEl("circle",{
+      cx:w/2,cy:h/2,r:Math.max(0,d/2-sw/2),
+      fill:state.bgColor,stroke,"stroke-width":sw
+    });
+  }else{
+    const radius=state.shape==="square"?0:Math.min(bw,bh)*(state.radius/100);
+    shape=svgEl("rect",{
+      x:x+sw/2,y:y+sw/2,width:Math.max(0,bw-sw),height:Math.max(0,bh-sw),
+      rx:radius,ry:radius,fill:state.bgColor,stroke,"stroke-width":sw
+    });
+  }
+  if(state.shadow) shape.setAttribute("filter","url(#shadow)");
+  preview.appendChild(shape);
+}
+
+function addBuiltinIcon(icon){
+  const w=state.width,h=state.height;
+  const size=Math.min(w,h)*(state.iconSize/100);
+  const x=w/2 + w*(state.offsetX/100);
+  const y=h/2 + h*(state.offsetY/100);
+
+  const outer=svgEl("svg",{
+    x:x-size/2,y:y-size/2,width:size,height:size,
+    viewBox:icon.viewBox,
+    color:state.iconColor,
+    overflow:"visible"
+  });
+  outer.innerHTML=icon.svg;
+  preview.appendChild(outer);
+}
+
+function addUploadedIcon(icon){
+  const w=state.width,h=state.height;
+  const size=Math.min(w,h)*(state.iconSize/100);
+  const x=w/2 + w*(state.offsetX/100)-size/2;
+  const y=h/2 + h*(state.offsetY/100)-size/2;
+
+  if(icon.kind==="svg" && state.tint){
+    const fo=svgEl("g",{transform:`translate(${x} ${y})`});
+    const image=svgEl("image",{href:icon.url,x:0,y:0,width:size,height:size,preserveAspectRatio:"xMidYMid meet",filter:"url(#tintFilter)"});
+    fo.appendChild(image);
+    preview.appendChild(fo);
+  }else if(icon.kind==="raster" && state.tint){
+    const image=svgEl("image",{href:icon.url,x,y,width:size,height:size,preserveAspectRatio:"xMidYMid meet",filter:"url(#tintFilter)"});
+    preview.appendChild(image);
+  }else{
+    const image=svgEl("image",{href:icon.url,x,y,width:size,height:size,preserveAspectRatio:"xMidYMid meet"});
+    preview.appendChild(image);
+  }
+}
+
+function renderPreview(){
+  preview.setAttribute("width",state.width);
+  preview.setAttribute("height",state.height);
+  preview.setAttribute("viewBox",`0 0 ${state.width} ${state.height}`);
+  preview.innerHTML="";
+
+  const defs=svgEl("defs");
+  defs.innerHTML=`
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="${state.width*.012}" dy="${state.height*.018}" stdDeviation="${Math.min(state.width,state.height)*.018}" flood-opacity=".28"/>
+    </filter>
+    <filter id="tintFilter" color-interpolation-filters="sRGB">
+      <feFlood flood-color="${state.iconColor}" result="flood"/>
+      <feComposite in="flood" in2="SourceAlpha" operator="in"/>
+    </filter>`;
+  preview.appendChild(defs);
+
+  addBackground();
+
+  const icon=currentIcon();
+  if(icon){
+    if(state.selectedType==="builtin") addBuiltinIcon(icon);
+    else addUploadedIcon(icon);
+  }
+
+  $("#canvasWrap").style.transform=`scale(${state.zoom/100})`;
+  $("#stageInfo").textContent=`${state.width} × ${state.height} px`;
+  $("#radiusRow").style.opacity=state.shape==="rounded"?"1":".45";
+}
+
+function bindColor(colorId,hexId,key){
+  const c=$(colorId),h=$(hexId);
+  c.addEventListener("input",()=>{state[key]=c.value.toUpperCase();h.value=state[key];renderPreview();});
+  h.addEventListener("change",()=>{state[key]=hexNormalize(h.value,state[key]);h.value=state[key];c.value=state[key];renderPreview();});
+}
+bindColor("#iconColor","#iconHex","iconColor");
+bindColor("#bgColor","#bgHex","bgColor");
+bindColor("#borderColor","#borderHex","borderColor");
+
+function bindRange(id,valId,key,suffix="%"){
+  const el=$(id),out=$(valId);
+  el.addEventListener("input",()=>{
+    state[key]=Number(el.value);
+    out.textContent=el.value+suffix;
+    renderPreview();
+  });
+}
+bindRange("#iconSize","#iconSizeVal","iconSize");
+bindRange("#offsetX","#offsetXVal","offsetX");
+bindRange("#offsetY","#offsetYVal","offsetY");
+bindRange("#radiusRange","#radiusVal","radius");
+bindRange("#bgInset","#bgInsetVal","bgInset");
+bindRange("#borderWidth","#borderWidthVal","borderWidth");
+
+$$(".shape-btn").forEach(b=>b.onclick=()=>{
+  state.shape=b.dataset.shape;
+  $$(".shape-btn").forEach(x=>x.classList.toggle("active",x===b));
+  renderPreview();
+});
+$("#borderToggle").onchange=e=>{
+  state.border=e.target.checked;
+  $("#borderControls").style.display=state.border?"block":"none";
+  renderPreview();
+};
+$("#shadowToggle").onchange=e=>{state.shadow=e.target.checked;renderPreview();};
+$("#tintToggle").onchange=e=>{state.tint=e.target.checked;renderPreview();};
+
+function updateCanvas(w,h){
+  state.width=Math.max(20,Math.min(4096,Number(w)||512));
+  state.height=Math.max(20,Math.min(4096,Number(h)||512));
+  $("#canvasW").value=state.width;$("#canvasH").value=state.height;
+  renderPreview();
+}
+$$(".preset").forEach(b=>b.onclick=()=>updateCanvas(b.dataset.size,b.dataset.size));
+$("#canvasW").onchange=e=>{
+  const w=Number(e.target.value)||512;
+  if($("#lockSquare").checked) updateCanvas(w,w); else updateCanvas(w,state.height);
+};
+$("#canvasH").onchange=e=>{
+  const h=Number(e.target.value)||512;
+  if($("#lockSquare").checked) updateCanvas(h,h); else updateCanvas(state.width,h);
+};
+
+$("#zoomRange").oninput=e=>{
+  state.zoom=Number(e.target.value);$("#zoomLabel").textContent=state.zoom+"%";renderPreview();
+};
+$("#zoomOut").onclick=()=>{
+  state.zoom=Math.max(25,state.zoom-10);$("#zoomRange").value=state.zoom;$("#zoomLabel").textContent=state.zoom+"%";renderPreview();
+};
+$("#zoomIn").onclick=()=>{
+  state.zoom=Math.min(200,state.zoom+10);$("#zoomRange").value=state.zoom;$("#zoomLabel").textContent=state.zoom+"%";renderPreview();
+};
+
+$("#swapBtn").onclick=()=>{
+  [state.iconColor,state.bgColor]=[state.bgColor,state.iconColor];
+  $("#iconColor").value=state.iconColor;$("#iconHex").value=state.iconColor;
+  $("#bgColor").value=state.bgColor;$("#bgHex").value=state.bgColor;
+  renderPreview();
+};
+
+function resetAll(){
+  Object.assign(state,{
+    shape:"rounded",iconColor:"#FFFFFF",bgColor:"#2563EB",iconSize:58,
+    offsetX:0,offsetY:0,radius:22,bgInset:0,border:false,borderColor:"#FFFFFF",
+    borderWidth:3,shadow:false,width:512,height:512,zoom:100,tint:true
+  });
+  $("#iconColor").value="#ffffff";$("#iconHex").value="#FFFFFF";
+  $("#bgColor").value="#2563eb";$("#bgHex").value="#2563EB";
+  $("#iconSize").value=58;$("#iconSizeVal").textContent="58%";
+  $("#offsetX").value=0;$("#offsetXVal").textContent="0%";
+  $("#offsetY").value=0;$("#offsetYVal").textContent="0%";
+  $("#radiusRange").value=22;$("#radiusVal").textContent="22%";
+  $("#bgInset").value=0;$("#bgInsetVal").textContent="0%";
+  $("#borderToggle").checked=false;$("#borderControls").style.display="none";
+  $("#shadowToggle").checked=false;$("#tintToggle").checked=true;
+  $("#canvasW").value=512;$("#canvasH").value=512;
+  $("#zoomRange").value=100;$("#zoomLabel").textContent="100%";
+  $$(".shape-btn").forEach(b=>b.classList.toggle("active",b.dataset.shape==="rounded"));
+  renderPreview();toast("已還原預設設定");
+}
+$("#resetBtn").onclick=resetAll;
+
+function filename(ext){
+  const icon=currentIcon();
+  const n=(icon?.name||"icon").replace(/[\\/:*?"<>|]/g,"_");
+  return `${n}_${state.width}x${state.height}.${ext}`;
+}
+
+function serializedSvg(){
+  const clone=preview.cloneNode(true);
+  clone.removeAttribute("width");
+  clone.removeAttribute("height");
+  clone.setAttribute("xmlns",SVG_NS);
+  clone.setAttribute("viewBox",`0 0 ${state.width} ${state.height}`);
+  return new XMLSerializer().serializeToString(clone);
+}
+function downloadBlob(blob,name){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+}
+function exportSvg(){
+  const svg=serializedSvg();
+  downloadBlob(new Blob([svg],{type:"image/svg+xml;charset=utf-8"}),filename("svg"));
+  toast("SVG 已匯出");
+}
+async function exportPng(){
+  const svg=serializedSvg();
+  const url=URL.createObjectURL(new Blob([svg],{type:"image/svg+xml;charset=utf-8"}));
+  const img=new Image();
+  img.onload=()=>{
+    const canvas=document.createElement("canvas");
+    canvas.width=state.width;canvas.height=state.height;
+    const ctx=canvas.getContext("2d");
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0,state.width,state.height);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(blob=>{
+      if(!blob){toast("PNG 匯出失敗");return;}
+      downloadBlob(blob,filename("png"));
+      toast("PNG 已匯出");
+    },"image/png");
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);toast("PNG 匯出失敗，請改用 SVG");};
+  img.src=url;
+}
+$("#svgBtn").onclick=exportSvg;
+$("#svgBtn2").onclick=exportSvg;
+$("#pngBtn").onclick=exportPng;
+$("#pngBtn2").onclick=exportPng;
+
+renderTabs();
+renderIconGrid();
+renderPreview();
+</script>
+</body>
+</html>
