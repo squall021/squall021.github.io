@@ -17,7 +17,80 @@ jobs:
       - name: Apply V1.5.2 share permission patch
         shell: bash
         run: |
-          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAoKcCA9IFBhdGgoInJvdXRlLXBsYW5uZXIvaW5kZXguaHRtbCIpCnMgPSBwLnJlYWRfdGV4dChlbmNvZGluZz0idXRmLTgiKQoKZGVmIHJlcChvbGQsIG5ldywgbGFiZWwpOgogICAgZ2xvYmFsIHMKICAgIGlmIG9sZCBub3QgaW4gczoKICAgICAgICByYWlzZSBTeXN0ZW1FeGl0KGYie2xhYmVsfSB0YXJnZXQgbm90IGZvdW5kIikKICAgIHMgPSBzLnJlcGxhY2Uob2xkLCBuZXcsIDEpCgpyZXAoIjx0aXRsZT7ot6/lvpHopo/lioPlt6XlhbcgVjEuNS4xPC90aXRsZT4iLAogICAgIjx0aXRsZT7ot6/lvpHopo/lioPlt6XlhbcgVjEuNS4yPC90aXRsZT4iLAogICAgInRpdGxlIikKCnJlcCgKICAgICIuc2hhcmV3YXJue2ZvbnQtc2l6ZToxMnB4O2NvbG9yOiM5MjQwMGU7bGluZS1oZWlnaHQ6MS41fSIsCiAgICAiLnNoYXJld2Fybntmb250LXNpemU6MTJweDtjb2xvcjojOTI0MDBlO2xpbmUtaGVpZ2h0OjEuNX0uc2hhcmUtcGVybWlzc2lvbntkaXNwbGF5OmZsZXg7YWxpZ24taXRlbXM6ZmxleC1zdGFydDtnYXA6OHB4O2JvcmRlcjoxcHggc29saWQgdmFyKC0tbGluZSk7Ym9yZGVyLXJhZGl1czoxMHB4O3BhZGRpbmc6MTBweDtiYWNrZ3JvdW5kOiNmOGZhZmM7Zm9udC1zaXplOjEzcHg7Zm9udC13ZWlnaHQ6NzAwfS5zaGFyZS1wZXJtaXNzaW9uIGlucHV0e21hcmdpbi10b3A6MnB4O3dpZHRoOjE3cHg7aGVpZ2h0OjE3cHg7ZmxleDowIDAgYXV0b30uc2hhcmUtcGVybWlzc2lvbi1ub3Rle2ZvbnQtc2l6ZToxMXB4O2NvbG9yOnZhcigtLW11dGVkKTtsaW5lLWhlaWdodDoxLjU7bWFyZ2luOjVweCAwIDlweH0iLAogICAgInNoYXJlIHBlcm1pc3Npb24gY3NzIikKCnJlcCgKICAgICLliIbkuqvpgKPntZDmnIPlsI/ot6/nt5ros4fmlpnlo5PnuK7lnKjntrLlnYAgIyDlvIzmlrnvvIzkuI3pnIDos4fmlpnluqvjgJvlsI/mlrnplovllJ/lvozpoJDoqK3ngbadlKjllKrogI7mqKHlvI/jgIIiLAogICAgIuWIhuS6q+mAo+e1kOmgkOioreeCuuWUr+iugO+8m+mcgOimgeiuqOWwjeaWueS/ruaUueaZgu+8jOWPr+WcqOWIhuS6q+imluWJveWLvumBuueOAjOWFgeiosem3qOi8r+OAjeOAgiIsCiAgICAic2lkZWJhciBzaGFyZSBoaW50IikKCnJlcCgKICAgICJWMS41LjEg57i96Lev57ea6bue5LiK6ZmQ77yaNTDvvIjnm67nmoTlnLDvvIvlrprkvY3pu57vvInjgIIiLAogICAgIlYxLjUuMiDnuL3ot6/nt5rpu57kuIrpmZDvvJo1MO+8iOebrueahOWcsO+8i+WumuS9jem7nu+8ieOAgCIsCiAgICAicm91dGUgdmVyc2lvbiIpCgpyZXAoCiAgICAnPGRpdiBpZD0icmVhZG9ubHliYXIiIGNsYXNzPSJyZWFkb25seWJhciI+PHN0cm9uZyBpZD0icmVhZG9ubHlUaXRsZSI+5YiG5Lqr6Lev57eaPC9zdHJvbmc+PGRpdiBpZD0icmVhZG9ubHlNZXRhIiBjbGFzcz0ibWV0YSI+PC9kaXY+PGJ1dHRvbiBpZD0iY29weUVkaXQiIGNsYXNzPSJidG4gcHJpbWFyeSI+6KSH6KO95q2k6Lev57ea5LiY57eo6LyvPC9idXR0bj48L2Rpdj4nLAogICAgJzxkaXYgaWQ9InJlYWRvbmx5YmFyIiBjbGFzcz0icmVhZG9ubHliYXIiPjxzdHJvbmcgaWQ9InJlYWRvbmx5VGl0bGUiPuWIhuS6q+i3r+e3mjwvc3Ryb25nPjxkaXYgaWQ9InJlYWRvbmx5TWV0YSIgY2xhc3M9Im1ldGEiPjwvZGl2PjwvZGl2PicsCiAgICAicmVtb3ZlIGNvcHkgZWRpdCBidXR0b24iKQoKcmVwKAogICAgJzxkaXYgaWQ9InNoYXJlTW9kYWwiIGNsYXNzPSJtb2RhbGJnIj48ZGl2IGNsYXNzPSJzaGFyZW1vZGFsIj48aDI+5YiG5Lqr6Lev57eaPC9oMj48dGV4dGFyZWEgaWQ9InNoYXJlVXJsIiBjbGFzcz0ic2hhcmV1cmwiIHJlYWRvbmx5PjwvdGV4dGFyZWE+JywKICAgICc8ZGl2IGlkPSJzaGFyZU1vZGFsIiBjbGFzcz0ibW9kYWxiZyI+PGRpdiBjbGFzcz0ic2hhcmVtb2RhbCI+PGgyPuWIhuS6q+i3r+e3mjwvaDI+PGxhYmVsIGNsYXNzPSJzaGFyZS1wZXJtaXNzaW9uIj48aW5wdXQgaWQ9InNoYXJlRWRpdGFibGUiIHR5cGU9ImNoZWNrYm94Ij48c3Bhbj7lhYHoqLHopqHliLDmraTpgKPntZDnmoTkurrnt6jovK/ot6/nt5o8L3NwYW4+PC9sYWJlbD48ZGl2IGNsYXNzPSJzaGFyZS1wZXJtaXNzaW9uLW5vdGUiPumgkOioreS4jemgi+mBuue+8neWUr+iugOWIhuS6q+OAgumBuemBu+W+jO+8jOaMgeacieips+mAo+e1kOeahOS6uuWPr+ebtOaOpee/ruaUuei3r+e3mu+8m+S/ruaUueS4jeacg+aIn+Wvq+S9oOeahOWOn+Wni+i3r+e3muOAgjwvZGl2Pjx0ZXh0YXJlYSBpZD0ic2hhcmVVcmwiIGNsYXNzPSJzaGFyZXVybCIgcmVhZG9ubHk+PC90ZXh0YXJlYT4nLAogICAgInNoYXJlIG1vZGFsIHBlcm1pc3Npb24gb3B0aW9uIikKCnJlcCgKICAgICJzaGFyZVdhcm46JCgnc2hhcmVXYXJuJykscmVhZG9ubHlUaXRsZTokKCdyZWFkb25seVRpdGxlJykscmVhZG9ubHlNZXRhOiQoJ3JlYWRvbmx5TWV0YScpLGNvcHlFZGl0OiQoJ2NvcHlFZGl0JyksZXhidG46JCgnZXhidG4nKSIsCiAgICAic2hhcmVXYXJuOiQoJ3NoYXJlV2FybicpLHNoYXJlRWRpdGFibGUkKCJzaGFyZUVkaXRhYmxlIikscmVhZG9ubHlUaXRsZTokKCdyZWFkb25seVRpdGxlJykscmVhZG9ubHlNZXRhOiQoJ3JlYWRvbmx5TWV0YScpLGV4YnRuOiQoJ2V4YnRuJykiLAogICAgImVsZW1lbnQgbWFwIikKCnJlcCgKICAgICJmdW5jdGlvbiBkYXRhKCl7cmV0dXJue2FwcDonUm91dGVQbGFubmVyTm9Hb29nbGUnLHZlcnNpb246JzEuNS4xJywiLAogICAgImZ1bmN0aW9uIGRhdGEoKXtyZXR1cm57YXBwOidSb3V0ZVBsYW5uZXJOb0dvb2dsZScsdmVyc2lvbjonMS41LjInLCIsCiAgICAiZGF0YSB2ZXJzaW9uIikKCnJlcCgKICAgICJmdW5jdGlvbiBzaGFyZVBheWxvYWQoKXtTLm5hbWU9RS5yb3V0ZU5hbWUudmFsdWUudHJpbSgpO3JldHVybnt2OjEsbjpTLm5hbWUsYzpTLmNyZWF0ZWRBdCx1Om5ldyBEYXRlKCkudG9JU09TdHJpbmcoKSxkOiIsCiAgICAiZnVuY3Rpb24gc2hhcmVQYXlsb2FkKCl7Uy5uYW1lPUUucm91dGVOYW1lLnZhbHVlLnRyaW0oKTtyZXR1cm57djoyLGU6RS5zaGFyZUVkaXRhYmxlLmNoZWNrZWQ/MTowLG46Uy5uYW1lLGM6Uy5jcmVhdGVkQXQsdTpuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCksZDoiLAogICAgInNoYXJlIHBheWxvYWQgcGVybWlzc2lvbiIpCgpvbGRfaW5pdCA9ICIiImFzeW5jIGZ1bmN0aW9uIGluaXRTaGFyZWRSb3V0ZSgpe2lmKCFsb2NhdGlvbi5oYXNoLnN0YXJ0c1dpdGgoJyNzaGFyZT0nKSlyZXR1cm47dHJ5e2NvbnN0IHA9YXdhaXQgdW5wYWNrU2hhcmUobG9jYXRpb24uaGFzaC5zbGljZSg3KSk7Uy5yZWFkb25seT10cnVlO3Jlc3RvcmUocGF5bG9hZFByb2plY3QocCkpO2RvY3VtZW50LmJvZHkuY2xhc3NMaXN0LmFkZCgncmVhZG9ubHknKTtFLnJlYWRvbmx5VGl0bGUudGV4dENvbnRlbnQ9cC5ufHwn5YiG5Lqr6Lev57eaJztFLnJlYWRvbmx5TWV0YS50ZXh0Q29udGVudD1g5bu656uL77yaJHtmbXREYXRlKHAuYyl9JHtwLnU/J+OAgOWIhuS6q++8micrZm10RGF0ZShwLnUpOidnfWA7c2V0TW9kZShudWxsKTtyZW5kZXIoKTtmaXQoKTtyb3V0ZSgpO3NldFRpbWVvdXQoKCk9Pm1hcC5pbnZhbGlkYXRlU2l6ZSgpLDApfWNhdGNoKGUpe2NvbnNvbGUuZXJyb3IoZSk7Uy5yZWFkb25seT1mYWxzZTtkb2N1bWVudC5ib2R5LmNsYXNzTGlzdC5yZW1vdmUoJ3JlYWRvbmx5Jyk7dG9hc3QoYOWIhuS6q+i3r+e3muiugOWPluWkseaVl++8miR7ZS5tZXNzYWdlfWApfX0iIiIKbmV3X2luaXQgPSAiIiJhc3luYyBmdW5jdGlvbiBpbml0U2hhcmVkUm91dGUoKXt pZighbG9jYXRpb24uaGFzaC5zdGFydHNXaXRoKCcjc2hhcmU9JykpcmV0dXJuO3RyeXtjb25zdCBwPWF3YWl0IHVucGFja1NoYXJlKGxvY2F0aW9uLmhhc2guc2xpY2UoNykpLGVkaXRhYmxlPXAuZT09PTE7Uy5yZWFkb25seT0hZWRpdGFibGU7cmVzdG9yZShwYXlsb2FkUHJvamVjdChwKSk7ZG9jdW1lbnQuYm9keS5jbGFzc0xpc3QudG9nZ2xlKCdyZWFkb25seScsIWVkaXRhYmxlKTtFLnJlYWRvbmx5VGl0bGUudGV4dENvbnRlbnQ9cC5ufHwn5YiG5Lqr6Lev57eaJztFLnJlYWRvbmx5TWV0YS50ZXh0Q29udGVudD1g5bu656uL77yaJHtmbXREYXRlKHAuYyl9JHtwLnU/J+OAgOWIhuS6q++8micrZm10RGF0ZShwLnUpOidnfWA7c2V0TW9kZShudWxsKTtyZW5kZXIoKTtmaXQoKTtyb3V0ZSgpO3NldFRpbWVvdXQoKCk9Pm1hcC5pbnZhbGlkYXRlU2l6ZSgpLDApO2lmKGVkaXRhYmxlKXRvYXN0KCfmrKTriIzkuqvpgKPntZDlt7LplovmlL7nt6jovK/vvJvkv67mlLnlj6rlrZjlnKjnm67liY3ngI/opr3lmajjgIHkuI3mnIPlm57lrqvoharlp4vot6/nt5rjgIInKX1jYXRjaChlKXtjb25zb2xlLmVycm9yKGUpO1MucmVhZG9ubHk9ZmFsc2U7ZG9jdW1lbnQuYm9keS5jbGFzc0xpc3QucmVtb3ZlKCdyZWFkb25seScpO3RvYXN0KGBliIbkuqvot6/nt5ros4fmlpnlj5blpLHmlZfvvJoke2UubWVzc2FnZX1gKX19IiIiCnJlcChvbGRfaW5pdCwgbmV3X2luaXQsICJzaGFyZWQgcm91dGUgcGVybWlzc2lvbiIpCgpvbGRfaGFuZGxlcnMgPSAiIiJFLnNoYXJlLm9uY2xpY2s9c2hvd1NoYXJlO0Uuc2hhcmVTaWRlLm9uY2xpY2s9c2hvd1NoYXJlO0Uuc2hhcmVKc29uLm9uY2xpY2s9KCk9PmV4KCdqc29uJyk7RS5jb3B5U2hhcmUub25jbGljaz1jb3B5U2hhcmU7RS5jbG9zZVNoYXJlLm9uY2xpY2s9KCk9PkUuc2hhcmVNb2RhbC5jbGFzc0xpc3QucmVtb3ZlKCdvbicpO0Uuc2hhcmVNb2RhbC5vbmNsaWNrPWU9PntpZihlLnRhcmdldD09PUUuc2hhcmVNb2RhbClFLnNoYXJlTW9kYWwuY2xhc3NMaXN0LnJlbW92ZSgnb24nKX07RS5jb3B5RWRpdC5vbmNsaWNrPSgpPT57Uy5yZWFkb25seT1mYWxzZTtkb2N1bWVudC5ib2R5LmNsYXNzTGlzdC5yZW1vdmUoJ3JlYWRvbmx5Jyk7aGlzdG9yeS5yZXBsYWNlU3RhdGUobnVsbCwnJyxsb2NhdGlvbi5wYXRobmFtZStsb2NhdGlvbi5zZWFyY2gpO3JlbmRlcigpO2ZpdCgpO3NldFRpbWVvdXQoKCk9Pm1hcC5pbnZhbGlkYXRlU2l6ZSgpLDApO3RvYXN0KCflt7Llu7rnq4vlj6/nt6jovK/lia/mnKzvvJvkuYvlvoznmoTkv67mlLnlj6rlrZjlnKjnm67liY3ngI/opr3lmajjgIInKX07RS5leGJ0bi5vbmNsaWNrIiIiCm5ld19oYW5kbGVycyA9ICIiIkUuc2hhcmUub25jbGljaz1zaG93U2hhcmU7RS5zaGFyZVNpZGUub25jbGljaz1zaG93U2hhcmU7RS5zaGFyZUVkaXRhYmxlLm9uY2hhbmdlPXNob3dTaGFyZTtFLnNoYXJlSnNvbi5vbmNsaWNrPSgpPT5leCgnanNvbicpO0UuY29weVNoYXJlLm9uY2xpY2s9Y29weVNoYXJlO0UuY2xvc2VTaGFyZS5vbmNsaWNrPSgpPT5FLnNoYXJlTW9kYWwuY2xhc3NMaXN0LnJlbW92ZSgnb24nKTtFLnNoYXJlTW9kYWwub25jbGljaz1lPT57aWYoZS50YXJnZXQ9PT1FLnNoYXJlTW9kYWwpRS5zaGFyZU1vZGFsLmNsYXNzTGlzdC5yZW1vdmUoJ29uJyl9O0UuZXhidG4ub25jbGljayIiIgpyZXAob2xkX2hhbmRsZXJzLCBuZXdfaGFuZGxlcnMsICJyZW1vdmUgY29weSBlZGl0IGhhbmRsZXIgYW5kIGFkZCBwZXJtaXNzaW9uIHJlZnJlc2giKQoKcC53cml0ZV90ZXh0KHMsIGVuY29kaW5nPSJ1dGYtOCIpCg==' | base64 -d > /tmp/patch_v152.py
+          cat > /tmp/patch_v152.py <<'PY'
+          from pathlib import Path
+
+          p = Path("route-planner/index.html")
+          s = p.read_text(encoding="utf-8")
+
+          def rep(old, new, label):
+              global s
+              if old not in s:
+                  raise SystemExit(f"{label} target not found")
+              s = s.replace(old, new, 1)
+
+          rep("<title>路徑規劃工具 V1.5.1</title>",
+              "<title>路徑規劃工具 V1.5.2</title>",
+              "title")
+
+          rep(
+              ".sharewarn{font-size:12px;color:#92400e;line-height:1.5}",
+              ".sharewarn{font-size:12px;color:#92400e;line-height:1.5}.share-permission{display:flex;align-items:flex-start;gap:8px;border:1px solid var(--line);border-radius:10px;padding:10px;background:#f8fafc;font-size:13px;font-weight:700}.share-permission input{margin-top:2px;width:17px;height:17px;flex:0 0 auto}.share-permission-note{font-size:11px;color:var(--muted);line-height:1.5;margin:5px 0 9px}",
+              "share permission css"
+          )
+
+          rep(
+              "分享連結會把路線資料壓縮在網址 # 後方，不需要資料庫；對方開啟後預設為唯讀模式。",
+              "分享連結預設為唯讀；需要讓對方修改時，可在分享視窗勾選「允許編輯」。",
+              "sidebar share hint"
+          )
+
+          rep(
+              "V1.5.1 總路線點上限：50（目的地＋定位點）。",
+              "V1.5.2 總路線點上限：50（目的地＋定位點）。",
+              "route version"
+          )
+
+          rep(
+              '<div id="readonlybar" class="readonlybar"><strong id="readonlyTitle">分享路線</strong><div id="readonlyMeta" class="meta"></div><button id="copyEdit" class="btn primary">複製此路線並編輯</button></div>',
+              '<div id="readonlybar" class="readonlybar"><strong id="readonlyTitle">分享路線</strong><div id="readonlyMeta" class="meta"></div></div>',
+              "remove copy edit button"
+          )
+
+          rep(
+              '<div id="shareModal" class="modalbg"><div class="sharemodal"><h2>分享路線</h2><textarea id="shareUrl" class="shareurl" readonly></textarea>',
+              '<div id="shareModal" class="modalbg"><div class="sharemodal"><h2>分享路線</h2><label class="share-permission"><input id="shareEditable" type="checkbox"><span>允許收到此連結的人編輯路線</span></label><div class="share-permission-note">預設不勾選＝唯讀分享。勾選後，持有該分享連結的人可直接修改路線；修改不會回寫你的原始路線。</div><textarea id="shareUrl" class="shareurl" readonly></textarea>',
+              "share modal permission option"
+          )
+
+          rep(
+              "shareWarn:$('shareWarn'),readonlyTitle:$('readonlyTitle'),readonlyMeta:$('readonlyMeta'),copyEdit:$('copyEdit'),exbtn:$('exbtn')",
+              "shareWarn:$('shareWarn'),shareEditable:$('shareEditable'),readonlyTitle:$('readonlyTitle'),readonlyMeta:$('readonlyMeta'),exbtn:$('exbtn')",
+              "element map"
+          )
+
+          rep(
+              "function data(){return{app:'RoutePlannerNoGoogle',version:'1.5.1',",
+              "function data(){return{app:'RoutePlannerNoGoogle',version:'1.5.2',",
+              "data version"
+          )
+
+          rep(
+              "function sharePayload(){S.name=E.routeName.value.trim();return{v:1,n:S.name,c:S.createdAt,u:new Date().toISOString(),d:",
+              "function sharePayload(){S.name=E.routeName.value.trim();return{v:2,e:E.shareEditable.checked?1:0,n:S.name,c:S.createdAt,u:new Date().toISOString(),d:",
+              "share payload permission"
+          )
+
+          old_init = """async function initSharedRoute(){if(!location.hash.startsWith('#share='))return;try{const p=await unpackShare(location.hash.slice(7));S.readonly=true;restore(payloadProject(p));document.body.classList.add('readonly');E.readonlyTitle.textContent=p.n||'分享路線';E.readonlyMeta.textContent=`建立：${fmtDate(p.c)}${p.u?'　分享：'+fmtDate(p.u):''}`;setMode(null);render();fit();route();setTimeout(()=>map.invalidateSize(),0)}catch(e){console.error(e);S.readonly=false;document.body.classList.remove('readonly');toast(`分享路線讀取失敗：${e.message}`)}}"""
+          new_init = """async function initSharedRoute(){if(!location.hash.startsWith('#share='))return;try{const p=await unpackShare(location.hash.slice(7)),editable=p.e===1;S.readonly=!editable;restore(payloadProject(p));document.body.classList.toggle('readonly',!editable);E.readonlyTitle.textContent=p.n||'分享路線';E.readonlyMeta.textContent=`建立：${fmtDate(p.c)}${p.u?'　分享：'+fmtDate(p.u):''}`;setMode(null);render();fit();route();setTimeout(()=>map.invalidateSize(),0);if(editable)toast('此分享連結已開放編輯；修改只存在目前瀏覽器，不會回寫原始路線。')}catch(e){console.error(e);S.readonly=false;document.body.classList.remove('readonly');toast(`分享路線讀取失敗：${e.message}`)}}"""
+          rep(old_init, new_init, "shared route permission")
+
+          old_handlers = """E.share.onclick=showShare;E.shareSide.onclick=showShare;E.shareJson.onclick=()=>ex('json');E.copyShare.onclick=copyShare;E.closeShare.onclick=()=>E.shareModal.classList.remove('on');E.shareModal.onclick=e=>{if(e.target===E.shareModal)E.shareModal.classList.remove('on')};E.copyEdit.onclick=()=>{S.readonly=false;document.body.classList.remove('readonly');history.replaceState(null,'',location.pathname+location.search);render();fit();setTimeout(()=>map.invalidateSize(),0);toast('已建立可編輯副本；之後的修改只存在目前瀏覽器。')};E.exbtn.onclick"""
+          new_handlers = """E.share.onclick=showShare;E.shareSide.onclick=showShare;E.shareEditable.onchange=showShare;E.shareJson.onclick=()=>ex('json');E.copyShare.onclick=copyShare;E.closeShare.onclick=()=>E.shareModal.classList.remove('on');E.shareModal.onclick=e=>{if(e.target===E.shareModal)E.shareModal.classList.remove('on')};E.exbtn.onclick"""
+          rep(old_handlers, new_handlers, "remove copy edit handler and add permission refresh")
+
+          p.write_text(s, encoding="utf-8")
+          PY
           python /tmp/patch_v152.py
       - name: Validate inline JavaScript
         shell: bash
