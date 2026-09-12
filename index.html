@@ -40,6 +40,7 @@ h1{margin:15px 0 10px;font-size:clamp(36px,5vw,58px);line-height:1.08;letter-spa
 .collage{--glow:rgba(255,158,79,.22);--art-bg:linear-gradient(135deg,#fff0e3,#fffaf5)}
 .idcard{--glow:rgba(45,190,156,.22);--art-bg:linear-gradient(135deg,#e5fbf5,#f8fffc)}
 .iconeditor{--glow:rgba(35,99,235,.22);--art-bg:linear-gradient(135deg,#eaf1ff,#f9fbff)}
+.routeplanner{--glow:rgba(14,165,233,.22);--art-bg:linear-gradient(135deg,#e8f7ff,#f8fcff)}
 footer{margin-top:30px;text-align:center;color:#8a93a5;font-size:12px}
 @media(max-width:760px){.shell{width:min(100% - 24px,1180px);padding:34px 0 45px}.hero{align-items:flex-start}.count{display:none}.grid{grid-template-columns:1fr}.card{min-height:310px;padding:20px}.art{height:145px}}
 @media(prefers-reduced-motion:reduce){.card,.arrow{transition:none}.card:hover{transform:none}}
@@ -53,7 +54,7 @@ footer{margin-top:30px;text-align:center;color:#8a93a5;font-size:12px}
     <h1>我的工具箱</h1>
     <p>常用網頁工具集中在這裡。點選下方卡片即可直接開啟，不需要再記住每一個 GitHub Pages 網址。</p>
   </div>
-  <div class="count"><strong>5</strong><span>目前工具</span></div>
+  <div class="count"><strong>6</strong><span>目前工具</span></div>
 </header>
 
 <section class="grid" aria-label="工具清單">
@@ -127,6 +128,26 @@ footer{margin-top:30px;text-align:center;color:#8a93a5;font-size:12px}
     <div class="card-head"><h2>圖示編輯器</h2><span class="arrow">→</span></div>
     <p>選擇常用圖示或上傳自訂素材，調整圖示與背景顏色、形狀、尺寸並匯出 PNG / SVG。</p>
     <span class="tag">icon-editor · V1.1</span>
+  </a>
+
+  <a class="card routeplanner" href="https://squall021.github.io/route-planner/" aria-label="開啟路徑規劃工具">
+    <div class="art">
+      <svg viewBox="0 0 520 210" aria-hidden="true">
+        <rect x="70" y="28" width="380" height="154" rx="22" fill="#fff" stroke="#9bdcf6" stroke-width="3"/>
+        <path d="M112 145C150 84 206 151 250 96S340 61 406 120" fill="none" stroke="#2563eb" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="114" cy="143" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
+        <circle cx="250" cy="96" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
+        <circle cx="405" cy="119" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
+        <circle cx="191" cy="121" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/>
+        <circle cx="324" cy="76" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/>
+        <text x="114" y="149" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">1</text>
+        <text x="250" y="102" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">2</text>
+        <text x="405" y="125" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">3</text>
+      </svg>
+    </div>
+    <div class="card-head"><h2>路徑規劃工具</h2><span class="arrow">→</span></div>
+    <p>使用 OpenStreetMap 規劃多目的地路線，支援定位點、CSV 匯入、路線分享、唯讀／可編輯權限與 QR Code。</p>
+    <span class="tag">route-planner · V1.5.4</span>
   </a>
 </section>
 
