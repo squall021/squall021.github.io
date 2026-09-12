@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IT 問題處理知識庫 V2</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand"><div class="logo">🧰</div><div>IT 問題處理知識庫</div></div>
+    <div class="top-actions">
+      <button class="btn" id="btnExport">⬇️ <span class="txt">匯出備份</span></button>
+      <button class="btn" id="btnImport">⬆️ <span class="txt">匯入備份</span></button>
+      <button class="btn" id="btnSync">☁️ <span class="txt">雲端同步</span></button>
+      <button class="btn" id="btnCategories">⚙️ <span class="txt">分類管理</span></button>
+      <button class="btn primary" id="btnAdd">＋ 新增紀錄</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="panel search-panel">
+        <div class="searchbox">
+          <span class="sicon">🔎</span>
+          <input id="searchInput" placeholder="搜尋標題、問題描述、錯誤訊息、原因、解決方式、標籤…" />
+        </div>
+        <div class="filters">
+          <select id="categoryFilter"><option value="">全部分類</option></select>
+          <select id="favoriteFilter">
+            <option value="">全部紀錄</option>
+            <option value="1">⭐ 只看收藏</option>
+          </select>
+          <input id="dateFrom" type="date" title="起始日期" />
+          <input id="dateTo" type="date" title="結束日期" />
+        </div>
+      </div>
+      <div class="panel stat-panel">
+        <div class="stat"><b id="statTotal">0</b><span>總紀錄</span></div>
+        <div class="stat"><b id="statFavorite">0</b><span>收藏</span></div>
+        <div class="stat"><b id="statCategories">0</b><span>問題分類</span></div>
+        <div class="stat"><b id="statMonth">0</b><span>本月新增</span></div>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <div class="count" id="resultCount">0 筆紀錄</div>
+      <div class="muted">資料儲存在目前瀏覽器</div>
+      <span class="sync-pill" id="syncStatus">☁️ 尚未設定雲端</span>
+      <div class="spacer"></div>
+      <div class="view-toggle" aria-label="顯示方式">
+        <button id="viewCards" class="active" title="卡片檢視">▦</button>
+        <button id="viewList" title="列表檢視">☷</button>
+      </div>
+      <button class="btn" id="btnClearFilters">清除篩選</button>
+    </div>
+
+    <section class="records" id="records"></section>
+  </main>
+</div>
+
+<!-- Edit modal -->
+<div class="modal" id="editModal">
+  <div class="dialog">
+    <div class="dialog-head">
+      <h2 id="editTitle">新增問題紀錄</h2><div class="spacer"></div>
+      <button class="btn icon" data-close="editModal">✕</button>
+    </div>
+    <form id="recordForm">
+      <div class="dialog-body">
+        <div class="form-grid">
+          <div class="field">
+            <label>問題類型 <span class="required">*</span></label>
+            <select id="fCategory" required></select>
+          </div>
+          <div class="field">
+            <label>處理日期 <span class="required">*</span></label>
+            <input id="fDate" type="date" required />
+          </div>
+
+          <div class="field full">
+            <label>問題標題 <span class="required">*</span></label>
+            <input id="fTitle" required placeholder="例如：Excel 無法複製貼上" />
+          </div>
+
+          <div class="field full">
+            <label>問題描述 <span class="required">*</span></label>
+            <textarea id="fDescription" required placeholder="描述使用者遇到的狀況、發生條件與影響…"></textarea>
+          </div>
+
+          <div class="field">
+            <label>錯誤訊息 / 症狀</label>
+            <textarea id="fSymptom" placeholder="可貼上錯誤代碼、訊息或具體症狀"></textarea>
+          </div>
+          <div class="field">
+            <label>發生環境</label>
+            <textarea id="fEnvironment" placeholder="例如：Windows 11 / Microsoft 365 / Excel 版本"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>原因</label>
+            <textarea id="fCause" placeholder="最後確認的原因或可能根因"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>解決方式 <span class="required">*</span></label>
+            <textarea id="fSolution" required placeholder="建議分步驟記錄：&#10;1. …&#10;2. …&#10;3. …"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>參考網址</label>
+            <textarea id="fLinks" placeholder="可輸入多筆網址，每行一筆"></textarea>
+            <div class="help">可放 YouTube、Microsoft 官方文件、論壇文章等。</div>
+          </div>
+
+          <div class="field">
+            <label>關鍵字 / 標籤</label>
+            <input id="fTags" placeholder="Excel, Office, 複製貼上, 更新Bug" />
+            <div class="help">以逗號分隔，方便日後搜尋。</div>
+          </div>
+          <div class="field">
+            <label>收藏</label>
+            <select id="fFavorite">
+              <option value="0">一般紀錄</option>
+              <option value="1">⭐ 加入收藏</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>備註</label>
+            <textarea id="fNotes" placeholder="補充資訊、後續觀察、版本差異等"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>附件 / 截圖</label>
+            <div class="attach-zone">
+              <input id="fFiles" type="file" accept="image/*" multiple />
+              <div class="help">最多 5 張圖片；建議單張小於 2 MB。附件會跟著瀏覽器資料一起保存。</div>
+              <div class="attach-grid" id="attachPreview"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dialog-foot">
+        <button type="button" class="btn" data-close="editModal">取消</button>
+        <button type="submit" class="btn primary">儲存紀錄</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Detail modal -->
+<div class="modal" id="detailModal">
+  <div class="dialog">
+    <div class="dialog-head">
+      <h2>問題紀錄</h2><div class="spacer"></div>
+      <button class="btn icon" data-close="detailModal">✕</button>
+    </div>
+    <div class="dialog-body" id="detailBody"></div>
+    <div class="dialog-foot">
+      <button class="btn danger" id="detailDelete">刪除</button>
+      <button class="btn" id="detailEdit">編輯</button>
+      <button class="btn primary" data-close="detailModal">關閉</button>
+    </div>
+  </div>
+</div>
+
+<!-- Category modal -->
+<div class="modal" id="categoryModal">
+  <div class="dialog small">
+    <div class="dialog-head">
+      <h2>分類管理</h2><div class="spacer"></div>
+      <button class="btn icon" data-close="categoryModal">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="category-row">
+        <input id="newCategoryIcon" class="icon-input" value="📌" maxlength="4" title="分類圖示" />
+        <input id="newCategory" placeholder="新增分類名稱，例如：Zoom" />
+        <button class="btn primary" id="addCategory">新增</button>
+      </div>
+      <div class="help">正在使用中的分類不允許刪除，避免既有紀錄失去分類。</div>
+      <div class="category-list" id="categoryList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Sync modal -->
+<div class="modal" id="syncModal">
+  <div class="dialog small">
+    <div class="dialog-head">
+      <h2>Google 試算表雲端同步</h2><div class="spacer"></div>
+      <button class="btn icon" data-close="syncModal">✕</button>
+    </div>
+    <div class="dialog-body">
+      <div class="form-grid">
+        <div class="field full">
+          <label>Apps Script Web App 網址</label>
+          <input id="syncUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+        </div>
+        <div class="field full">
+          <label>同步金鑰</label>
+          <input id="syncKey" type="password" placeholder="執行 Code.gs 的 setup() 後取得" autocomplete="off" />
+        </div>
+        <div class="field full">
+          <label class="inline-check"><input id="syncAuto" type="checkbox" /> 儲存、刪除或收藏變更時自動同步</label>
+        </div>
+        <div class="field full">
+          <div class="sync-help">
+            第一次使用：建立一份 Google 試算表 →「擴充功能 → Apps Script」→ 貼上本專案的 <b>apps-script/Code.gs</b> → 執行 <b>setup()</b> → 部署為 Web App。<br>
+            附件圖片目前仍保存在本機瀏覽器；雲端同步的是文字紀錄、分類與標籤。
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dialog-foot" style="flex-wrap:wrap">
+      <button class="btn" id="btnPullCloud">☁️ 從雲端下載</button>
+      <button class="btn" id="btnPushCloud">⬆️ 上傳全部資料</button>
+      <div style="flex:1"></div>
+      <button class="btn" data-close="syncModal">取消</button>
+      <button class="btn primary" id="btnSaveSync">儲存設定</button>
+    </div>
+  </div>
+</div>
+
+<input class="hidden" id="importFile" type="file" accept=".json,application/json" />
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
