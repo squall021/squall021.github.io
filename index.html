@@ -6,151 +6,28 @@
 <meta name="theme-color" content="#f4f7fb">
 <title>我的工具箱</title>
 <style>
-:root{
-  --bg:#f3f6fb;--panel:rgba(255,255,255,.88);--text:#192235;--muted:#6e788a;
-  --line:rgba(82,101,137,.14);--shadow:0 18px 55px rgba(37,52,81,.11);
-  --shadow-hover:0 26px 70px rgba(37,52,81,.18);--radius:26px
-}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:"Microsoft JhengHei","Noto Sans TC",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}
+:root{--bg:#f3f6fb;--panel:rgba(255,255,255,.88);--text:#192235;--muted:#6e788a;--line:rgba(82,101,137,.14);--shadow:0 18px 55px rgba(37,52,81,.11);--shadow-hover:0 26px 70px rgba(37,52,81,.18);--radius:26px}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Microsoft JhengHei","Noto Sans TC",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text)}
 body{min-height:100vh;background:radial-gradient(circle at 9% 3%,rgba(74,137,255,.18),transparent 29%),radial-gradient(circle at 92% 9%,rgba(151,97,255,.13),transparent 25%),linear-gradient(145deg,#f7f9fd,var(--bg))}
-a{color:inherit;text-decoration:none}
-.shell{width:min(1180px,calc(100% - 40px));margin:auto;padding:56px 0 70px}
-.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);font-size:13px;font-weight:800;color:#58647b;box-shadow:0 6px 20px rgba(45,61,95,.06)}
-h1{margin:15px 0 10px;font-size:clamp(36px,5vw,58px);line-height:1.08;letter-spacing:-1.5px}
-.hero p{max-width:690px;margin:0;color:var(--muted);font-size:16px;line-height:1.8}
-.count{flex:0 0 auto;padding:15px 19px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.74);box-shadow:0 8px 25px rgba(35,52,86,.07);text-align:center}
-.count strong{display:block;font-size:26px;line-height:1}.count span{display:block;margin-top:6px;color:var(--muted);font-size:12px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-.card{position:relative;min-height:330px;padding:26px;overflow:hidden;border:1px solid rgba(255,255,255,.9);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:.22s ease}
-.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:rgba(95,118,160,.24)}
-.card:focus-visible{outline:4px solid rgba(61,118,255,.25);outline-offset:4px}
-.card::after{content:"";position:absolute;width:220px;height:220px;right:-80px;top:-95px;border-radius:50%;background:var(--glow);opacity:.75}
-.art{height:156px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.8);border-radius:20px;background:var(--art-bg)}
-.art svg{width:88%;height:88%;position:relative;z-index:1}
-.card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px}
-.card h2{margin:0;font-size:22px;letter-spacing:-.4px}
-.arrow{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(35,52,86,.1);font-size:19px;transition:transform .2s ease}
-.card:hover .arrow{transform:translateX(3px)}
-.card p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.7}
-.tag{display:inline-block;margin-top:13px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.72);color:#667188;font-size:11px;font-weight:800}
-.table{--glow:rgba(74,142,255,.23);--art-bg:linear-gradient(135deg,#e8f2ff,#f8fbff)}
-.edit{--glow:rgba(127,92,255,.21);--art-bg:linear-gradient(135deg,#efeaff,#faf8ff)}
-.collage{--glow:rgba(255,158,79,.22);--art-bg:linear-gradient(135deg,#fff0e3,#fffaf5)}
-.idcard{--glow:rgba(45,190,156,.22);--art-bg:linear-gradient(135deg,#e5fbf5,#f8fffc)}
-.iconeditor{--glow:rgba(35,99,235,.22);--art-bg:linear-gradient(135deg,#eaf1ff,#f9fbff)}
-.routeplanner{--glow:rgba(14,165,233,.22);--art-bg:linear-gradient(135deg,#e8f7ff,#f8fcff)}
-footer{margin-top:30px;text-align:center;color:#8a93a5;font-size:12px}
-@media(max-width:760px){.shell{width:min(100% - 24px,1180px);padding:34px 0 45px}.hero{align-items:flex-start}.count{display:none}.grid{grid-template-columns:1fr}.card{min-height:310px;padding:20px}.art{height:145px}}
-@media(prefers-reduced-motion:reduce){.card,.arrow{transition:none}.card:hover{transform:none}}
+a{color:inherit;text-decoration:none}.shell{width:min(1180px,calc(100% - 40px));margin:auto;padding:56px 0 70px}.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.72);font-size:13px;font-weight:800;color:#58647b;box-shadow:0 6px 20px rgba(45,61,95,.06)}
+h1{margin:15px 0 10px;font-size:clamp(36px,5vw,58px);line-height:1.08;letter-spacing:-1.5px}.hero p{max-width:690px;margin:0;color:var(--muted);font-size:16px;line-height:1.8}.count{flex:0 0 auto;padding:15px 19px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.74);box-shadow:0 8px 25px rgba(35,52,86,.07);text-align:center}.count strong{display:block;font-size:26px;line-height:1}.count span{display:block;margin-top:6px;color:var(--muted);font-size:12px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.card{position:relative;min-height:330px;padding:26px;overflow:hidden;border:1px solid rgba(255,255,255,.9);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(12px);transition:.22s ease}.card:hover{transform:translateY(-6px);box-shadow:var(--shadow-hover);border-color:rgba(95,118,160,.24)}.card:focus-visible{outline:4px solid rgba(61,118,255,.25);outline-offset:4px}.card::after{content:"";position:absolute;width:220px;height:220px;right:-80px;top:-95px;border-radius:50%;background:var(--glow);opacity:.75}.art{height:156px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.8);border-radius:20px;background:var(--art-bg)}.art svg{width:88%;height:88%;position:relative;z-index:1}.card-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:20px}.card h2{margin:0;font-size:22px;letter-spacing:-.4px}.arrow{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#fff;box-shadow:0 6px 18px rgba(35,52,86,.1);font-size:19px;transition:transform .2s ease}.card:hover .arrow{transform:translateX(3px)}.card p{margin:9px 0 0;color:var(--muted);font-size:14px;line-height:1.7}.tag{display:inline-block;margin-top:13px;padding:6px 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.72);color:#667188;font-size:11px;font-weight:800}
+.table{--glow:rgba(74,142,255,.23);--art-bg:linear-gradient(135deg,#e8f2ff,#f8fbff)}.edit{--glow:rgba(127,92,255,.21);--art-bg:linear-gradient(135deg,#efeaff,#faf8ff)}.collage{--glow:rgba(255,158,79,.22);--art-bg:linear-gradient(135deg,#fff0e3,#fffaf5)}.idcard{--glow:rgba(45,190,156,.22);--art-bg:linear-gradient(135deg,#e5fbf5,#f8fffc)}.iconeditor{--glow:rgba(35,99,235,.22);--art-bg:linear-gradient(135deg,#eaf1ff,#f9fbff)}.routeplanner{--glow:rgba(14,165,233,.22);--art-bg:linear-gradient(135deg,#e8f7ff,#f8fcff)}.knowledge{--glow:rgba(13,148,136,.22);--art-bg:linear-gradient(135deg,#e6fbf7,#f7fffd)}
+footer{margin-top:30px;text-align:center;color:#8a93a5;font-size:12px}@media(max-width:760px){.shell{width:min(100% - 24px,1180px);padding:34px 0 45px}.hero{align-items:flex-start}.count{display:none}.grid{grid-template-columns:1fr}.card{min-height:310px;padding:20px}.art{height:145px}}@media(prefers-reduced-motion:reduce){.card,.arrow{transition:none}.card:hover{transform:none}}
 </style>
 </head>
 <body>
 <main class="shell">
-<header class="hero">
-  <div>
-    <div class="eyebrow">▦ GitHub Pages Launcher</div>
-    <h1>我的工具箱</h1>
-    <p>常用網頁工具集中在這裡。點選下方卡片即可直接開啟，不需要再記住每一個 GitHub Pages 網址。</p>
-  </div>
-  <div class="count"><strong>6</strong><span>目前工具</span></div>
-</header>
-
+<header class="hero"><div><div class="eyebrow">▦ GitHub Pages Launcher</div><h1>我的工具箱</h1><p>常用網頁工具集中在這裡。點選下方卡片即可直接開啟，不需要再記住每一個 GitHub Pages 網址。</p></div><div class="count"><strong>7</strong><span>目前工具</span></div></header>
 <section class="grid" aria-label="工具清單">
-  <a class="card table" href="https://squall021.github.io/table-cards/" aria-label="開啟桌卡製作工具">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="55" y="35" width="410" height="140" rx="22" fill="#fff" stroke="#9bc7ff" stroke-width="3"/>
-        <path d="M260 35v140" stroke="#c6ddf8" stroke-width="3" stroke-dasharray="8 7"/>
-        <path d="M95 142h330" stroke="#d9e8f8" stroke-width="5" stroke-linecap="round"/>
-        <text x="161" y="114" text-anchor="middle" font-size="25" font-weight="700" fill="#2864ad">桌卡</text>
-      </svg>
-    </div>
-    <div class="card-head"><h2>桌卡製作工具</h2><span class="arrow">→</span></div>
-    <p>製作活動桌卡、姓名牌，支援文字、底圖、Logo、批次名單與匯出。</p>
-    <span class="tag">table-cards</span>
-  </a>
-
-  <a class="card edit" href="https://squall021.github.io/photo-edit/" aria-label="開啟照片編輯器">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="80" y="30" width="250" height="150" rx="20" fill="#fff" stroke="#c7b9ff" stroke-width="3"/>
-        <circle cx="154" cy="84" r="28" fill="#dacfff"/>
-        <path d="M104 154l67-58 43 36 37-28 54 50z" fill="#8b72e8" opacity=".54"/>
-        <g transform="translate(354 47)"><rect width="104" height="116" rx="18" fill="#fff" stroke="#d6ccff" stroke-width="3"/><path d="M25 31h55M25 58h55M25 85h55" stroke="#9b85ec" stroke-width="5" stroke-linecap="round"/></g>
-      </svg>
-    </div>
-    <div class="card-head"><h2>照片編輯器</h2><span class="arrow">→</span></div>
-    <p>照片裁切、轉正、亮度調整、去背與批次處理等常用照片工作流程。</p>
-    <span class="tag">photo-edit</span>
-  </a>
-
-  <a class="card collage" href="https://squall021.github.io/photo-collage/" aria-label="開啟照片排版工具">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="126" y="24" width="268" height="164" rx="18" fill="#fff" stroke="#ffc99e" stroke-width="3"/>
-        <rect x="146" y="45" width="106" height="55" rx="9" fill="#ffd9bb"/><rect x="266" y="45" width="108" height="55" rx="9" fill="#ffe7d4"/>
-        <rect x="146" y="113" width="70" height="54" rx="9" fill="#ffe6d1"/><rect x="229" y="113" width="145" height="54" rx="9" fill="#ffd3b0"/>
-      </svg>
-    </div>
-    <div class="card-head"><h2>照片排版工具</h2><span class="arrow">→</span></div>
-    <p>將多張照片快速編排成頁面，設定版面、背景、封面與照片顯示方式。</p>
-    <span class="tag">photo-collage</span>
-  </a>
-
-  <a class="card idcard" href="https://squall021.github.io/ID-card/" aria-label="開啟名牌製作工具">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="82" y="34" width="356" height="142" rx="20" fill="#fff" stroke="#8bd9c5" stroke-width="3"/>
-        <rect x="112" y="57" width="76" height="18" rx="9" fill="#35b995" opacity=".2"/>
-        <rect x="112" y="91" width="188" height="25" rx="8" fill="#35b995" opacity=".14"/>
-        <rect x="341" y="67" width="58" height="58" rx="8" fill="#e2f8f2" stroke="#74cdb5" stroke-width="2"/>
-        <text x="206" y="110" text-anchor="middle" font-size="24" font-weight="700" fill="#25866f">工作人員</text>
-      </svg>
-    </div>
-    <div class="card-head"><h2>名牌製作</h2><span class="arrow">→</span></div>
-    <p>設計識別證與工作證，支援 Excel 套印、正反面、QR Code、份數設定與 A4 拼版。</p>
-    <span class="tag">ID-card</span>
-  </a>
-
-  <a class="card iconeditor" href="https://squall021.github.io/icon-editor/" aria-label="開啟圖示編輯器">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="72" y="38" width="120" height="120" rx="30" fill="#2563eb"/>
-        <path d="M103 91c15 29 25 39 54 54l18-18c5-5 11-6 17-4 9 3 18 5 26 5v27c-55 0-100-45-100-100h27c0 8 2 17 5 26 2 6 1 12-4 17l-18 18" transform="translate(-30 -10) scale(.72)" fill="#fff"/>
-        <rect x="232" y="44" width="90" height="90" rx="45" fill="#5b8def"/>
-        <path d="M277 66c-14 0-25 11-25 25 0 19 25 42 25 42s25-23 25-42c0-14-11-25-25-25zm0 34a9 9 0 1 1 0-18 9 9 0 0 1 0 18z" fill="#fff"/>
-        <rect x="350" y="47" width="105" height="105" rx="22" fill="#eaf1ff" stroke="#2563eb" stroke-width="3"/>
-        <path d="M374 129V78l28-10 28 10v51M386 91h7M411 91h7M386 108h7M411 108h7" fill="none" stroke="#2563eb" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="card-head"><h2>圖示編輯器</h2><span class="arrow">→</span></div>
-    <p>選擇常用圖示或上傳自訂素材，調整圖示與背景顏色、形狀、尺寸並匯出 PNG / SVG。</p>
-    <span class="tag">icon-editor · V1.1</span>
-  </a>
-
-  <a class="card routeplanner" href="https://squall021.github.io/route-planner/" aria-label="開啟路徑規劃工具">
-    <div class="art">
-      <svg viewBox="0 0 520 210" aria-hidden="true">
-        <rect x="70" y="28" width="380" height="154" rx="22" fill="#fff" stroke="#9bdcf6" stroke-width="3"/>
-        <path d="M112 145C150 84 206 151 250 96S340 61 406 120" fill="none" stroke="#2563eb" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="114" cy="143" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
-        <circle cx="250" cy="96" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
-        <circle cx="405" cy="119" r="17" fill="#111827" stroke="#fff" stroke-width="5"/>
-        <circle cx="191" cy="121" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/>
-        <circle cx="324" cy="76" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/>
-        <text x="114" y="149" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">1</text>
-        <text x="250" y="102" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">2</text>
-        <text x="405" y="125" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">3</text>
-      </svg>
-    </div>
-    <div class="card-head"><h2>路徑規劃工具</h2><span class="arrow">→</span></div>
-    <p>使用 OpenStreetMap 規劃多目的地路線，支援定位點、CSV 匯入、路線分享、唯讀／可編輯權限與 QR Code。</p>
-    <span class="tag">route-planner · V1.5.4</span>
-  </a>
+<a class="card table" href="https://squall021.github.io/table-cards/" aria-label="開啟桌卡製作工具"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="55" y="35" width="410" height="140" rx="22" fill="#fff" stroke="#9bc7ff" stroke-width="3"/><path d="M260 35v140" stroke="#c6ddf8" stroke-width="3" stroke-dasharray="8 7"/><path d="M95 142h330" stroke="#d9e8f8" stroke-width="5" stroke-linecap="round"/><text x="161" y="114" text-anchor="middle" font-size="25" font-weight="700" fill="#2864ad">桌卡</text></svg></div><div class="card-head"><h2>桌卡製作工具</h2><span class="arrow">→</span></div><p>製作活動桌卡、姓名牌，支援文字、底圖、Logo、批次名單與匯出。</p><span class="tag">table-cards</span></a>
+<a class="card edit" href="https://squall021.github.io/photo-edit/" aria-label="開啟照片編輯器"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="80" y="30" width="250" height="150" rx="20" fill="#fff" stroke="#c7b9ff" stroke-width="3"/><circle cx="154" cy="84" r="28" fill="#dacfff"/><path d="M104 154l67-58 43 36 37-28 54 50z" fill="#8b72e8" opacity=".54"/><g transform="translate(354 47)"><rect width="104" height="116" rx="18" fill="#fff" stroke="#d6ccff" stroke-width="3"/><path d="M25 31h55M25 58h55M25 85h55" stroke="#9b85ec" stroke-width="5" stroke-linecap="round"/></g></svg></div><div class="card-head"><h2>照片編輯器</h2><span class="arrow">→</span></div><p>照片裁切、轉正、亮度調整、去背與批次處理等常用照片工作流程。</p><span class="tag">photo-edit</span></a>
+<a class="card collage" href="https://squall021.github.io/photo-collage/" aria-label="開啟照片排版工具"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="126" y="24" width="268" height="164" rx="18" fill="#fff" stroke="#ffc99e" stroke-width="3"/><rect x="146" y="45" width="106" height="55" rx="9" fill="#ffd9bb"/><rect x="266" y="45" width="108" height="55" rx="9" fill="#ffe7d4"/><rect x="146" y="113" width="70" height="54" rx="9" fill="#ffe6d1"/><rect x="229" y="113" width="145" height="54" rx="9" fill="#ffd3b0"/></svg></div><div class="card-head"><h2>照片排版工具</h2><span class="arrow">→</span></div><p>將多張照片快速編排成頁面，設定版面、背景、封面與照片顯示方式。</p><span class="tag">photo-collage</span></a>
+<a class="card idcard" href="https://squall021.github.io/ID-card/" aria-label="開啟名牌製作工具"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="82" y="34" width="356" height="142" rx="20" fill="#fff" stroke="#8bd9c5" stroke-width="3"/><rect x="112" y="57" width="76" height="18" rx="9" fill="#35b995" opacity=".2"/><rect x="112" y="91" width="188" height="25" rx="8" fill="#35b995" opacity=".14"/><rect x="341" y="67" width="58" height="58" rx="8" fill="#e2f8f2" stroke="#74cdb5" stroke-width="2"/><text x="206" y="110" text-anchor="middle" font-size="24" font-weight="700" fill="#25866f">工作人員</text></svg></div><div class="card-head"><h2>名牌製作</h2><span class="arrow">→</span></div><p>設計識別證與工作證，支援 Excel 套印、正反面、QR Code、份數設定與 A4 拼版。</p><span class="tag">ID-card</span></a>
+<a class="card iconeditor" href="https://squall021.github.io/icon-editor/" aria-label="開啟圖示編輯器"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="72" y="38" width="120" height="120" rx="30" fill="#2563eb"/><path d="M103 91c15 29 25 39 54 54l18-18c5-5 11-6 17-4 9 3 18 5 26 5v27c-55 0-100-45-100-100h27c0 8 2 17 5 26 2 6 1 12-4 17l-18 18" transform="translate(-30 -10) scale(.72)" fill="#fff"/><rect x="232" y="44" width="90" height="90" rx="45" fill="#5b8def"/><path d="M277 66c-14 0-25 11-25 25 0 19 25 42 25 42s25-23 25-42c0-14-11-25-25-25zm0 34a9 9 0 1 1 0-18 9 9 0 0 1 0 18z" fill="#fff"/><rect x="350" y="47" width="105" height="105" rx="22" fill="#eaf1ff" stroke="#2563eb" stroke-width="3"/><path d="M374 129V78l28-10 28 10v51M386 91h7M411 91h7M386 108h7M411 108h7" fill="none" stroke="#2563eb" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="card-head"><h2>圖示編輯器</h2><span class="arrow">→</span></div><p>選擇常用圖示或上傳自訂素材，調整圖示與背景顏色、形狀、尺寸並匯出 PNG / SVG。</p><span class="tag">icon-editor · V1.1</span></a>
+<a class="card routeplanner" href="https://squall021.github.io/route-planner/" aria-label="開啟路徑規劃工具"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="70" y="28" width="380" height="154" rx="22" fill="#fff" stroke="#9bdcf6" stroke-width="3"/><path d="M112 145C150 84 206 151 250 96S340 61 406 120" fill="none" stroke="#2563eb" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><circle cx="114" cy="143" r="17" fill="#111827" stroke="#fff" stroke-width="5"/><circle cx="250" cy="96" r="17" fill="#111827" stroke="#fff" stroke-width="5"/><circle cx="405" cy="119" r="17" fill="#111827" stroke="#fff" stroke-width="5"/><circle cx="191" cy="121" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/><circle cx="324" cy="76" r="10" fill="#f59e0b" stroke="#fff" stroke-width="4"/><text x="114" y="149" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">1</text><text x="250" y="102" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">2</text><text x="405" y="125" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">3</text></svg></div><div class="card-head"><h2>路徑規劃工具</h2><span class="arrow">→</span></div><p>使用 OpenStreetMap 規劃多目的地路線，支援定位點、CSV 匯入、路線分享、唯讀／可編輯權限與 QR Code。</p><span class="tag">route-planner · V1.5.4</span></a>
+<a class="card knowledge" href="https://squall021.github.io/it-knowledge-base/" aria-label="開啟 IT 問題處理知識庫"><div class="art"><svg viewBox="0 0 520 210" aria-hidden="true"><rect x="94" y="28" width="250" height="156" rx="20" fill="#fff" stroke="#82d8c9" stroke-width="3"/><rect x="121" y="55" width="155" height="15" rx="7" fill="#19a38c" opacity=".24"/><rect x="121" y="87" width="188" height="10" rx="5" fill="#19a38c" opacity=".14"/><rect x="121" y="110" width="166" height="10" rx="5" fill="#19a38c" opacity=".14"/><rect x="121" y="133" width="118" height="10" rx="5" fill="#19a38c" opacity=".14"/><circle cx="385" cy="79" r="43" fill="#dff7f2" stroke="#76cfbe" stroke-width="3"/><path d="M367 79l12 12 25-29" fill="none" stroke="#15947f" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M358 146h62" stroke="#15947f" stroke-width="9" stroke-linecap="round" opacity=".48"/></svg></div><div class="card-head"><h2>IT 問題處理知識庫</h2><span class="arrow">→</span></div><p>記錄特殊問題、原因、解決方式與參考資料，支援全文搜尋、分類、標籤、收藏與雲端同步。</p><span class="tag">it-knowledge-base · V2</span></a>
 </section>
-
 <footer>Tools Home · GitHub Pages</footer>
 </main>
 </body>
