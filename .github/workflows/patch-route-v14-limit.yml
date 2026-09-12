@@ -1,0 +1,66 @@
+name: Patch Route Planner V1.4 Route Limit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-route-v14-limit.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Raise route point limit to 50
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('route-planner/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = [
+              ('<title>路徑規劃工具 V1.3</title>', '<title>路徑規劃工具 V1.4</title>'),
+              ("if(p.length>25)return status('為避免公開伺服器負擔，V1.1 最多 25 個路線點。',1);", "if(p.length>50)return status('V1.4 總路線點上限為 50 個（目的地 + 定位點）。',1);"),
+              ("version:'1.3'", "version:'1.4'"),
+              ('<div class="hint">地圖：OpenStreetMap　路線：OSRM　搜尋：Nominatim。均不需 Google API Key。</div>', '<div class="hint">地圖：OpenStreetMap　路線：OSRM　搜尋：Nominatim。均不需 Google API Key。<br>V1.4 總路線點上限：50（目的地＋定位點）。</div>'),
+          ]
+
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'patch target not found: {old[:80]}')
+              s = s.replace(old, new, 1)
+
+          old_add = "function addDest(p){S.d.push(point(p));if(S.d.length>1)S.v.push([]);render();fit();route()}function addVia(p){if(S.d.length<2)return toast('請先加入至少 2 個目的地。');S.v[S.leg].push(point(p,'via'));render();route()}"
+          new_add = "function addDest(p){if(ordered().length>=50)return toast('總路線點已達 50 個上限。');S.d.push(point(p));if(S.d.length>1)S.v.push([]);render();fit();route()}function addVia(p){if(S.d.length<2)return toast('請先加入至少 2 個目的地。');if(ordered().length>=50)return toast('總路線點已達 50 個上限。');S.v[S.leg].push(point(p,'via'));render();route()}"
+          if old_add not in s:
+              raise SystemExit('addDest/addVia patch target not found')
+          s = s.replace(old_add, new_add, 1)
+
+          old_csv = "if(!ds.length)throw Error('CSV 中沒有目的地資料。');ds.sort((a,b)=>a.order-b.order);"
+          new_csv = "if(!ds.length)throw Error('CSV 中沒有目的地資料。');if(ds.length+vs.length>50)throw Error(`CSV 共有 ${ds.length+vs.length} 個總路線點，超過 V1.4 的 50 個上限。`);ds.sort((a,b)=>a.order-b.order);"
+          if old_csv not in s:
+              raise SystemExit('CSV limit patch target not found')
+          s = s.replace(old_csv, new_csv, 1)
+
+          old_restore = "function restore(j){if(!j||!Array.isArray(j.destinations))throw Error('檔案格式不正確');S.d=j.destinations.map(x=>point(x)).filter(x=>valid(x.lat,x.lng));"
+          new_restore = "function restore(j){if(!j||!Array.isArray(j.destinations))throw Error('檔案格式不正確');const total=j.destinations.length+(Array.isArray(j.viasByLeg)?j.viasByLeg.reduce((n,a)=>n+(Array.isArray(a)?a.length:0),0):0);if(total>50)throw Error(`專案共有 ${total} 個總路線點，超過 V1.4 的 50 個上限。`);S.d=j.destinations.map(x=>point(x)).filter(x=>valid(x.lat,x.lng));"
+          if old_restore not in s:
+              raise SystemExit('JSON restore limit patch target not found')
+          s = s.replace(old_restore, new_restore, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit patched page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add route-planner/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Update route planner to V1.4 with 50-point limit"
+          git push
