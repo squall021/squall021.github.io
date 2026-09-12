@@ -1,0 +1,55 @@
+name: Patch Route Planner V1.2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-route-v12.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add destination name editing
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('route-planner/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_add = "function addDest(p){S.d.push(point(p));if(S.d.length>1)S.v.push([]);render();fit();route()}function addVia(p){if(S.d.length<2)return toast('請先加入至少 2 個目的地。');S.v[S.leg].push(point(p,'via'));render();route()}"
+          new_add = old_add + "function editDest(i){const d=S.d[i];if(!d)return;const x=prompt('修改目的地名稱',d.name||'');if(x===null)return;const n=x.trim();if(!n)return toast('目的地名稱不能空白。');d.name=n;render();toast(`已將第 ${i+1} 個目的地改名為「${n}」。`)}"
+          if old_add not in s:
+              raise SystemExit('addDest patch target not found')
+          s = s.replace(old_add, new_add, 1)
+
+          old_dest = '''function render(){renderDest();renderLeg();renderVia();renderMarkers();E.count.textContent=`${S.d.length} 個`;E.viamode.disabled=S.d.length<2;E.clearvia.disabled=S.d.length<2;if(S.mode==='via'&&S.d.length<2)setMode(null)}function renderDest(){E.destlist.innerHTML=S.d.length?S.d.map((d,i)=>`<div class="dest"><div class="num">${i+1}</div><div><div class="name">${esc(d.name)}</div><div class="sub">${coord(d)}</div></div><div class="mini"><button data-a="up" data-i="${i}" ${i===0?'disabled':''}>↑</button><button data-a="down" data-i="${i}" ${i===S.d.length-1?'disabled':''}>↓</button><button data-a="del" data-i="${i}">×</button></div></div>`).join(''):'<div class="empty">尚未加入目的地。</div>'}'''
+          new_dest = '''function render(){renderDest();renderLeg();renderVia();renderMarkers();E.count.textContent=`${S.d.length} 個`;E.viamode.disabled=S.d.length<2;E.clearvia.disabled=S.d.length<2;if(S.mode==='via'&&S.d.length<2)setMode(null)}function renderDest(){E.destlist.innerHTML=S.d.length?S.d.map((d,i)=>`<div class="dest"><div class="num">${i+1}</div><div><div class="name">${esc(d.name)}</div><div class="sub">${coord(d)}</div></div><div class="mini"><button data-a="edit" data-i="${i}" title="修改名稱">✎</button><button data-a="up" data-i="${i}" ${i===0?'disabled':''}>↑</button><button data-a="down" data-i="${i}" ${i===S.d.length-1?'disabled':''}>↓</button><button data-a="del" data-i="${i}">×</button></div></div>`).join(''):'<div class="empty">尚未加入目的地。</div>'}'''
+          if old_dest not in s:
+              raise SystemExit('renderDest patch target not found')
+          s = s.replace(old_dest, new_dest, 1)
+
+          old_click = "E.destlist.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const i=+b.dataset.i;b.dataset.a==='del'?delDest(i):moveDest(i,b.dataset.a==='up'?-1:1)};"
+          new_click = "E.destlist.onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const i=+b.dataset.i;if(b.dataset.a==='edit')editDest(i);else if(b.dataset.a==='del')delDest(i);else moveDest(i,b.dataset.a==='up'?-1:1)};"
+          if old_click not in s:
+              raise SystemExit('destination click patch target not found')
+          s = s.replace(old_click, new_click, 1)
+
+          s = s.replace('<title>路徑規劃工具</title>', '<title>路徑規劃工具 V1.2</title>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit patched page
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add route-planner/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Update route planner to V1.2 with editable destination names"
+          git push
