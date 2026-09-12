@@ -1,0 +1,92 @@
+name: Patch Route Planner V1.5.3 Shared Route List
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/patch-route-v153-share-list.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply V1.5.3 shared route list patch
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('route-planner/index.html')
+          s = p.read_text(encoding='utf-8')
+
+          def rep(old, new, label):
+              global s
+              if old not in s:
+                  raise SystemExit(f'{label} target not found')
+              s = s.replace(old, new, 1)
+
+          rep('<title>路徑規劃工具 V1.5.2</title>', '<title>路徑規劃工具 V1.5.3</title>', 'title')
+          rep('V1.5.2 總路線點上限：50（目的地＋定位點）。', 'V1.5.3 總路線點上限：50（目的地＋定位點）。', 'version text')
+          rep("version:'1.5.2'", "version:'1.5.3'", 'data version')
+
+          rep(
+              ".readonlybar strong{font-size:16px}.readonlybar .meta{font-size:11px;color:var(--muted);margin:4px 0 8px}",
+              ".readonlybar strong{font-size:16px}.readonlybar .meta{font-size:11px;color:var(--muted);margin:4px 0 8px}.shared-route-head{font-size:12px;font-weight:800;color:#475569;margin:9px 0 6px}.shared-route-list{display:grid;gap:5px;max-height:38vh;overflow:auto;padding-right:2px}.shared-route-item{width:100%;display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:center;text-align:left;border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 8px;color:var(--text);cursor:pointer}.shared-route-item:hover{background:#f1f5f9;border-color:#cbd5e1}.shared-route-num{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#111827;color:#fff;font-size:12px;font-weight:900}.shared-route-name{font-size:13px;font-weight:800;line-height:1.35;word-break:break-word}",
+              'shared route css'
+          )
+          rep(
+              "@media(max-width:820px){.layout{grid-template-columns:1fr;grid-template-rows:48% 52%}.side{border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:16px}.actions button{font-size:12px;padding:7px}.readonly .layout{grid-template-rows:1fr}}",
+              "@media(max-width:820px){.layout{grid-template-columns:1fr;grid-template-rows:48% 52%}.side{border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:16px}.actions button{font-size:12px;padding:7px}.readonly .layout{grid-template-rows:1fr}.readonlybar{max-width:calc(100% - 28px);max-height:44vh;overflow:auto}.shared-route-list{max-height:27vh}}",
+              'mobile css'
+          )
+          rep(
+              '<div id="readonlybar" class="readonlybar"><strong id="readonlyTitle">分享路線</strong><div id="readonlyMeta" class="meta"></div></div>',
+              '<div id="readonlybar" class="readonlybar"><strong id="readonlyTitle">分享路線</strong><div id="readonlyMeta" class="meta"></div><div class="shared-route-head">路線清單</div><div id="sharedRouteList" class="shared-route-list"></div></div>',
+              'readonly route list html'
+          )
+          rep(
+              "shareEditable:$('shareEditable'),readonlyTitle:$('readonlyTitle'),readonlyMeta:$('readonlyMeta'),exbtn:$('exbtn')",
+              "shareEditable:$('shareEditable'),readonlyTitle:$('readonlyTitle'),readonlyMeta:$('readonlyMeta'),sharedRouteList:$('sharedRouteList'),exbtn:$('exbtn')",
+              'element map'
+          )
+          anchor = "function fmtDate(x){if(!x)return'';try{return new Date(x).toLocaleString('zh-TW',{hour12:false})}catch{return x}}"
+          insert = anchor + "function renderSharedRouteList(){if(!E.sharedRouteList)return;E.sharedRouteList.innerHTML=S.d.length?S.d.map((d,i)=>`<button class=\"shared-route-item\" data-shared-dest=\"${i}\"><span class=\"shared-route-num\">${i+1}</span><span class=\"shared-route-name\">${esc(d.name)}</span></button>`).join(''):'<div class=\"empty\">沒有目的地。</div>'}"
+          rep(anchor, insert, 'shared route renderer')
+          rep(
+              "E.readonlyMeta.textContent=`建立：${fmtDate(p.c)}${p.u?'　分享：'+fmtDate(p.u):''}`;setMode(null);render();fit();route();setTimeout(()=>map.invalidateSize(),0);if(editable)",
+              "E.readonlyMeta.textContent=`建立：${fmtDate(p.c)}${p.u?'　分享：'+fmtDate(p.u):''}`;setMode(null);render();if(!editable)renderSharedRouteList();fit();route();setTimeout(()=>map.invalidateSize(),0);if(editable)",
+              'shared init render list'
+          )
+          rep(
+              "E.share.onclick=showShare;E.shareSide.onclick=showShare;E.shareEditable.onchange=showShare;",
+              "E.share.onclick=showShare;E.shareSide.onclick=showShare;E.shareEditable.onchange=showShare;E.sharedRouteList.onclick=e=>{const b=e.target.closest('[data-shared-dest]');if(!b)return;const i=+b.dataset.sharedDest,d=S.d[i];if(!d)return;map.flyTo([d.lat,d.lng],Math.max(map.getZoom(),15),{duration:.45});setTimeout(()=>S.dm[i]?.openPopup(),500)};",
+              'shared list click handler'
+          )
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate inline JavaScript
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('route-planner/index.html').read_text(encoding='utf-8')
+          blocks=re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>',s,re.S|re.I)
+          inline=[b for b in blocks if b.strip()]
+          if not inline:
+              raise SystemExit('No inline script found')
+          Path('/tmp/route-check.js').write_text(inline[-1],encoding='utf-8')
+          PY
+          node --check /tmp/route-check.js
+      - name: Commit V1.5.3
+        shell: bash
+        run: |
+          git config user.name "squall021"
+          git config user.email "squall021@users.noreply.github.com"
+          git add route-planner/index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Route Planner V1.5.3 shared route list"
+          git push
