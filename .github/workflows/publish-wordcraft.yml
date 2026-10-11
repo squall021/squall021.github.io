@@ -29,7 +29,7 @@ jobs:
           set -euo pipefail
           VERSION=0.5.0
           BASE="https://github.com/storytold/wordcraft/releases/download/v${VERSION}"
-          curl -fL --retry 3 "${BASE}/wordcraft-web-${VERSION}.zip" -o /tmp/wordcraft-web.zip
+          curl -fL --retry 3 "${BASE}/wordcraft-web-${VERSION}.zip" -o /tmp/wordcraft-web-${VERSION}.zip
           curl -fL --retry 3 "${BASE}/SHA256SUMS.txt" -o /tmp/SHA256SUMS.txt
           ( cd /tmp && grep -F "wordcraft-web-${VERSION}.zip" SHA256SUMS.txt | sha256sum -c - )
 
@@ -38,7 +38,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/wordcraft-extracted
-          unzip -q /tmp/wordcraft-web.zip -d /tmp/wordcraft-extracted
+          unzip -q /tmp/wordcraft-web-${VERSION}.zip -d /tmp/wordcraft-extracted
           INDEX="$(find /tmp/wordcraft-extracted -type f -name index.html -print -quit)"
           test -n "$INDEX" || { echo "Missing index.html"; exit 1; }
           WEBROOT="$(dirname "$INDEX")"
